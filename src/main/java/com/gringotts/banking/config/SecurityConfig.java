@@ -1,6 +1,7 @@
 package com.gringotts.banking.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -14,6 +15,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 public class SecurityConfig {
@@ -23,6 +27,10 @@ public class SecurityConfig {
 
     @Autowired
     private UserDetailsService userDetailsService;
+
+    // Frontend origin(s) loaded from configuration
+    @Value("${app.frontend.origin:http://localhost:5173}")
+    private String frontendOrigins; // comma-separated
 
     @Bean
     public AuthenticationProvider authenticationProvider() {
@@ -46,11 +54,16 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        // Public Endpoints: Login & Register
-                        .requestMatchers("/api/users/register", "/api/auth/login").permitAll()
 
+                        // 1. Allow Static Resources (Frontend)
+                        .requestMatchers("/", "/index.html", "/index.css", "/index.js").permitAll()
+                        .requestMatchers("/img/**").permitAll()
+                        // Public Endpoints: Login & Register
+                        .requestMatchers("/api/users/register", "/api/auth/login", "/api/auth/logout").permitAll()
+                        .requestMatchers("/uploads/**").permitAll() // Allow browsers to load images
                         // All other endpoints (Accounts, Transactions, Cards) are now LOCKED.
                         // You must send a valid JWT Token in the header to access them.
                         .anyRequest().authenticated()
@@ -62,5 +75,26 @@ public class SecurityConfig {
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
+    }
+
+    // CORS configuration source bean used by Spring Security
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        // Allow multiple comma-separated origins from configuration
+        for (String origin : frontendOrigins.split(",")) {
+            configuration.addAllowedOrigin(origin.trim());
+        }
+        configuration.addAllowedMethod("GET");
+        configuration.addAllowedMethod("POST");
+        configuration.addAllowedMethod("PUT");
+        configuration.addAllowedMethod("DELETE");
+        configuration.addAllowedMethod("OPTIONS");
+        configuration.addAllowedHeader("*");
+        configuration.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 }

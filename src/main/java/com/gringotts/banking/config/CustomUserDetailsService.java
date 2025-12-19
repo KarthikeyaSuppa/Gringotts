@@ -2,7 +2,6 @@ package com.gringotts.banking.config;
 
 import com.gringotts.banking.user.User;
 import com.gringotts.banking.user.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -13,13 +12,20 @@ import java.util.ArrayList;
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+
+    public CustomUserDetailsService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    public UserDetails loadUserByUsername(String input) throws UsernameNotFoundException {
+        // ✅ CHANGED: Check both Username AND Email columns
+        // We pass 'input' to both parameters. SQL will look like:
+        // WHERE username = input OR email = input
+        User user = userRepository.findByUsernameOrEmail(input, input)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with identifier: " + input));
+
 
         // 2. Wrap it in a Spring Security "User" object
         // Why? Because Spring Security doesn't know what your "User" class looks like.

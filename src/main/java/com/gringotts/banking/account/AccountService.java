@@ -42,6 +42,12 @@ public class AccountService {
         return accountRepository.save(account);
     }
 
+    public java.util.List<Account> getAccountsByUser(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        return accountRepository.findByUserId(user.getId());
+    }
+
     // Updated Method: Handles Deposit AND Tracking
     @Transactional // Ensures both save() calls happen or neither does
     public Account deposit(Long accountId, BigDecimal amount, TransactionType type) {
@@ -80,5 +86,12 @@ public class AccountService {
             return generateAccountNumber();
         }
         return accStr;
+    }
+
+    public void deleteAccount(Long accountId) {
+        if (!accountRepository.existsById(accountId)) {
+            throw new RuntimeException("Account not found");
+        }
+        accountRepository.deleteById(accountId);
     }
 }

@@ -68,4 +68,40 @@ public class CardController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    // NEW: POST /api/cards -> create card and return CardResponse (with tempPin)
+    @PostMapping("")
+    public ResponseEntity<?> createCard(@RequestBody Map<String, Object> req) {
+        try {
+            Long accountId = Long.valueOf(req.get("accountId").toString());
+            CardResponse resp = cardService.createCardForAccount(accountId);
+            return ResponseEntity.ok(resp);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    // NEW: PUT /api/cards/{id}/pin -> change existing card PIN
+    @PutMapping("/{id}/pin")
+    public ResponseEntity<?> changePin(@PathVariable("id") Long cardId, @RequestBody Map<String, String> req) {
+        try {
+            String oldPin = req.get("oldPin");
+            String newPin = req.get("newPin");
+            cardService.changePin(cardId, oldPin, newPin);
+            return ResponseEntity.ok("PIN changed");
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    // GET /api/cards/by-user/{userId}
+    @GetMapping("/by-user/{userId}")
+    public ResponseEntity<?> getCardsByUser(@PathVariable Long userId) {
+        try {
+            // Delegate to service to assemble cards per user's accounts
+            return ResponseEntity.ok(cardService.getCardsByUser(userId));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }

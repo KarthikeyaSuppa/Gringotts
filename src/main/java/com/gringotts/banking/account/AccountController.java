@@ -40,4 +40,25 @@ public class AccountController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    // DELETE /api/accounts/{id}
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteAccount(@PathVariable Long id) {
+        try {
+            accountService.deleteAccount(id);
+            return ResponseEntity.ok("Account deleted");
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    // GET /api/accounts/by-user/{userId}
+    @GetMapping("/by-user/{userId}")
+    public ResponseEntity<?> getAccountsByUser(@PathVariable Long userId) {
+        try {
+            return ResponseEntity.ok(accountService.getAccountsByUser(userId));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }

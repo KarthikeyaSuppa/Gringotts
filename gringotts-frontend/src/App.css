@@ -1,0 +1,696 @@
+/* style.css */
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&display=swap');
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;   
+}
+
+section{
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* Replace the URL below with your actual image file name */
+    background-image: url('img/Back-G.jpg');
+    /* Scales the image to cover the entire screen */
+    background-attachment: fixed; /* CRITICAL */ /* Keeps the background fixed during scrolling */     /* Scale image to cover the entire screen */
+    background-size: cover;
+    /* Centers the image */
+    background-position: center;
+    
+    min-height: 100vh;
+    
+    /* Prevents tiling */
+    background-repeat: no-repeat;
+    
+    /* Removes default browser margins */
+    margin: 0;
+}
+
+.login-box, .signup-box {
+  width: 325px;
+  height: auto;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 
+    0 4px 8px 2px rgba(64, 58, 58, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.1);
+  position: relative;
+  overflow: hidden;
+  justify-content: center;
+  display:flex;
+}
+
+.UserDetails-box::before, .login-box::before, .signup-box::before { 
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;                                                                 
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.8),
+    transparent
+  );
+}
+
+.UserDetails-box::after, .login-box::after, .signup-box::after { 
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 100%;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.8),
+    transparent,
+    rgba(255, 255, 255, 0.3)
+  );
+}
+
+h2 {
+    text-align: center;
+    margin: 15px 0 1px;
+    font-size: 2em;
+    font-weight: 500;
+    color: whitesmoke;
+    font-family: "Dancing Script", cursive;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+}
+
+.input-box {
+    position: relative;
+    width: 265px;
+    /* CHANGED: Increased bottom margin from 25px to 35px to make room for error text */
+    margin: 7px 0 30px; 
+    border: 2px solid rgba(255, 255, 255, 0.7);
+    border-width: 1.5px;
+    border-radius: 7px;
+    padding: 1px 0;
+}
+
+.input-box label {
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    color: rgba(255, 255, 255, 0.6);
+    transform: translateY(-50%); 
+    font-size: 1em;
+    pointer-events: none; 
+    transition: .5s; 
+}
+
+/* NEW CODE */
+.input-box input:focus ~ label,
+.input-box input:not(:placeholder-shown) ~ label { 
+    top: -10px;
+    left: 10px; 
+    color: whitesmoke;
+    font-size: 0.7em;
+    padding: 0 5px;
+}
+
+.input-box input{
+    width: 80%;
+    height: 35px;
+    font-size: 1em;
+    color: whitesmoke;
+    background: transparent;
+    border: none;
+    outline: none;
+    padding: 0 0 0 10px; 
+}
+
+.input-box input::-ms-reveal, 
+.input-box input::-ms-clear { 
+    display: none;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 13px; 
+    top: 55%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: whitesmoke;
+    font-size: 1.5em;
+}
+
+.password-toggle img {
+    width: 20px;   
+    height: 20px;  
+    opacity: 0.7; 
+}
+
+.password-box input:focus + label + .password-toggle,
+.password-box input:not(:placeholder-shown) + label + .password-toggle {
+    opacity: 1; 
+}
+
+/* --- ✅ NEW ERROR TEXT STYLING --- */
+.error-text {
+    position: absolute;
+    bottom: -22px; /* Pushes text below the box border */
+    left: 5px;
+    font-size: 0.65em;
+    color: #ffcccc; /* Light red/white mix for visibility on glass */
+    font-weight: 400;
+    white-space: nowrap; /* Prevents wrapping to keep layout clean */
+    pointer-events: none;
+}
+
+.remember-forgot{
+    margin: -10px 0 10px;
+    font-size: 0.7em;
+    color: whitesmoke;
+    display: flex;
+    justify-content: space-between;
+}
+
+.remember-forgot label input {
+    margin-right: 3px; 
+    -webkit-appearance: none;
+    appearance: none;
+    width: 13px; 
+    height: 13px;
+    border: 0.7px solid rgba(255, 255, 255, 0.7); 
+    background-color: transparent; 
+    display: inline-block;
+    vertical-align: middle; 
+    cursor: pointer;
+    border-radius: 3px;
+    transition: all 0.2s ease-in-out;
+    position: relative;
+}
+
+.remember-forgot label input:checked::before {
+    content: ''; 
+    display: block;
+    width: 3px; 
+    height: 9px; 
+    position: absolute; 
+    left: 3px;          
+    border: solid whitesmoke;
+    border-width: 0 1.5px 1.5px 0; 
+    transform: rotate(41deg);
+}
+
+.remember-forgot label input:hover {
+    border-color: whitesmoke; 
+}
+
+.remember-forgot a{
+    color: whitesmoke;
+    text-decoration: none;
+}
+
+.remember-forgot a:hover{
+    text-decoration: underline;
+}
+
+.btn { 
+    width: 100%;
+    padding: 8px; 
+    margin-top: 7px; 
+    background-image: url('img/Back-G.jpg'); 
+    background-position: center; 
+    background-size: cover;      
+    background-repeat: no-repeat;
+    font-size: 13px; 
+    font-family: "Playwrite NO", cursive;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+    cursor: pointer; 
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 8px; 
+    color: white;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+} 
+
+.btn:hover { 
+    transform: translateY(-2px); 
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); 
+} 
+
+.btn:active { 
+    transform: translateY(0); 
+}
+
+.register-link{
+    margin: 10px 0;
+    font-size: 0.9em;
+    color: whitesmoke;
+    text-align: center;
+}
+
+.register-link p a{
+    color: whitesmoke;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.register-link p a:hover{
+    text-decoration: underline;
+}   
+
+/* ... (UserDetails section remains unchanged) ... */
+#U-Home {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-image: url('/img/Back-G.jpg');
+    background-attachment: fixed;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    margin: 0;
+}
+
+.UserDetails-box {
+    width: 600px;
+    height: auto; 
+    min-height: 400px;
+    padding-bottom: 20px;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 4px 8px 2px rgba(64, 58, 58, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.5),
+                inset 0 -1px 0 rgba(255, 255, 255, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.user-image-upload {
+    display: flex;
+    justify-content: center;
+    margin-top: 15px;
+    margin-bottom: 5px;
+}
+
+.user-icon-placeholder {
+    width: 80px; 
+    height: 80px;
+    border-radius: 50%;
+    cursor: pointer;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.3s ease;
+    border: 2px solid rgba(255, 255, 255, 0.6);
+    background: rgba(0,0,0,0.1);
+}
+
+.user-icon-placeholder:hover {
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
+}
+
+#uploadIcon img {
+    width: 40px;
+    height: 40px;
+    filter: invert(100%); 
+    object-fit: contain;
+}
+
+#uploadedImagePreview {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; 
+}
+
+.name-container, .contact-container {
+    display: flex;
+    align-items: flex-start;
+    margin: 10px 30px 25px 25px;
+    gap: 45px;
+}
+
+.name-container .input-box, .contact-container .input-box {
+    flex-grow: 1;
+    width: auto;
+    margin: 0;
+}
+
+#address {
+    width: 100%;
+    height: 100%;
+    font-size: 1em;
+    color: whitesmoke;
+    background: transparent;
+    border: none;
+    outline: none;
+    padding: 10px;
+    resize: none;
+    font-family: 'Poppins', sans-serif;
+}
+
+.c-btn {
+    width: 35%;
+    padding: 8px;
+    margin-top: 7px;
+    display: block; 
+    margin-left: auto;
+    margin-right: auto;
+    /* Use public path to ensure correct resolution in Vite */
+    background-image: url('/img/Back-G.jpg');
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    font-size: 13px;
+    font-family: "Playwrite NO", cursive;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 8px;
+    color: white;
+    backdrop-filter: blur(10px);
+}
+
+
+/* --- RIGHT SIDE NAVBAR (Glassmorphism) ---*/
+.right-navbar {
+    position: fixed;
+    top: 0;
+    right: -100px; /* Hidden initially */
+    width: 50px;    /* Minimal width */
+    height: 80vh;   /* 80% of viewport height */
+    margin-top: 10vh; /* Centered vertically */
+    margin-right: 25px;
+    border-radius: 50px; /* Fully rounded capsule shape */
+
+
+    /* Decorative background image (use same image as buttons) + subtle glass overlay */
+    background-color: rgba(255,255,255,0.03); /* fallback color */
+    background-image: linear-gradient(rgba(255,255,255,0.03), rgba(255,255,255,0.03)), url('/img/Back-G.jpg');
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-blend-mode: overlay; /* lets the glass color blend with the image */
+
+    /* Glass Effect */
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.10); /* Subtle border */
+
+    /* Layout */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 0;
+    z-index: 1000;
+
+    /* SMOOTH TRANSITION MAGIC */
+    /* 1. 'right' 0.8s handles the slide-in animation */
+    /* 2. 'transform' 0.4s handles the hover scaling (smoothness) */
+    /* 3. 'background' 0.4s handles the color change */
+    transition: right 0.8s ease-in-out,
+                transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1),
+                background 0.4s ease;
+}
+
+/* Navbar visible state */
+.right-navbar.show {
+    right: 0;
+}
+
+/* Navbar Hover Effect - Minimal & Smooth */
+.right-navbar:hover {
+    /* background: rgba(255, 255, 255, 0.15);  Slightly brighter */
+    transform: scale(1.02); /* Very subtle growth (2%) to keep it minimal */
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.1); /* Soft glow */
+}
+
+/* Icons in Navbar */
+.nav-icon {
+    width: 35px;
+    height: 35px;
+    margin-bottom: 25px;
+    cursor: pointer;
+    border-radius: 50%; /* Perfect circle */
+    background: rgba(255, 255, 255, 0.05); /* Faint background */
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 18px;
+
+    /* SMOOTH ICON TRANSITION */
+    /* cubic-bezier gives it a slight 'bounce' feel */
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.nav-icon:hover {
+    background: rgba(255, 255, 255, 0.3);
+    color: #fff;
+    transform: scale(1.2); /* 20% growth for the icon */
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+.logout-btn {
+    margin-top: auto; /* Pushes logout to bottom */
+    background: rgba(255, 50, 50, 0.15);
+    color: #ffcccc;
+}
+
+.logout-btn:hover {
+    background: rgba(255, 50, 50, 0.4);
+    /* Rotate effect for logout button only */
+    transform: scale(1.2);
+    color: white;
+}
+
+/* --- ANIMATION CLASSES (Triggered on Continue) --- */
+
+/* 1. The Form Box Minimizing to the Top-Left (Sequential Step 2) */
+/* It moves from center (50vw, 50vh) to the icon position (20px, 20px) */
+.UserDetails-box.minimized {
+    will-change: transform, opacity;
+    /* Speed matches profile icon (1.5s) */
+    transition: transform 1.5s cubic-bezier(0.22, 1, 0.36, 1), opacity 1.5s ease-in;
+    
+    /* Logic: Translate X = Target(20px) - Center(50vw) */
+    /* This sucks the box directly into the profile icon */
+    transform: translate(calc(60px - 50vw), calc(60px - 50vh)) scale(0);
+    opacity: 0;
+}
+
+
+/* 2. The Profile Icon Moving to Top-Left */
+.user-icon-placeholder.moving-to-corner {
+     position: fixed; 
+     z-index: 2000;
+     will-change: transform, top, left, width, height;
+     
+     /* CHANGED: 0.8s -> 1.5s. Added 'ease-in-out' for smooth diagonal float */
+     transition: 
+        top 1.5s cubic-bezier(0.25, 1, 0.5, 1), 
+        left 1.5s cubic-bezier(0.25, 1, 0.5, 1), 
+        width 1.5s ease, 
+        height 1.5s ease,
+        transform 1.5s ease;
+
+     /* Target Destination: Top Left Corner */
+     top: 20px !important;
+     left: 20px !important;
+     transform: translate(0, 0) !important;
+
+     /* Final Size on Dashboard (Small) */
+     width: 50px;
+     height: 50px;
+     border: 2px solid white;
+     box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+
+/* 3. Dashboard Entry Animation (Step 3) */
+/* Initial State: Hidden at Bottom-Right */
+.dashboard-enter {
+    opacity: 0;
+    /* Start far bottom-right and small */
+    transform: translate(30vw, 30vh) scale(0.2); 
+    transition: transform 1.5s cubic-bezier(0.22, 1, 0.36, 1), opacity 1.5s ease-out;
+}
+
+/* Final State: Centered and Full Size */
+.dashboard-enter-active {
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+}
+
+/* Modal styles (used by UserDetails PIN & Retry modals) */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0,0,0,0.6);
+    z-index: 5000;
+}
+
+.modal {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
+    padding: 20px;
+    border-radius: 12px;
+    color: whitesmoke;
+    min-width: 320px;
+    max-width: 420px;
+    text-align: center;
+}
+
+.modal h3 { margin-bottom: 8px; }
+.modal p { color: #ddd; margin-bottom: 12px; }
+
+/* Rubik font for numbers in account summary */
+.rubik-number {
+    font-family: 'Rubik', sans-serif;
+    font-variant-numeric: tabular-nums;
+    -moz-font-feature-settings: "tnum" 1;
+    -webkit-font-feature-settings: "tnum" 1;
+    font-feature-settings: "tnum" 1;
+    letter-spacing: 0.6px;
+}
+
+/* Profile pill (top-left) - starts as a circle, expands into a pill showing welcome text */
+.profile-pill {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 50px; /* circle size */
+  height: 50px;
+  padding: 6px;
+  border-radius: 50px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  overflow: hidden;
+  cursor: pointer;
+  transition: width 0.45s cubic-bezier(0.22, 0.9, 0.2, 1),
+              padding 0.35s ease, box-shadow 0.25s ease;
+}
+
+.profile-pill img {
+  width: 100%;
+  height: 100%;
+  max-width: 38px;
+  max-height: 38px;
+  object-fit: cover;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* When expanded, become a pill showing welcome text on the right */
+.profile-pill.expanded {
+  /* width should expand but not overlap the main content. We calculate a max width.
+     If account summary sits in center with minWidth ~600, then this calculation
+     leaves the remaining space. It still caps to 320px for small screens. */
+  width: min(280px, max(200px, calc(100% - 660px)));
+  padding: 8px 14px 8px 8px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+}
+
+.profile-pill .welcome-text {
+  display: none;
+  color: whitesmoke;
+  line-height: 1.05;
+  text-align: left;
+}
+.profile-pill.expanded .welcome-text {
+  display: block;
+  font-size: 12px;
+}
+.profile-pill .welcome-text .greet {
+  opacity: 0.9;
+  font-size: 12px;
+  color: #e6e6e6;
+}
+.profile-pill .welcome-text .name {
+  font-weight: 600;
+  color: white;
+  font-size: 14px;
+  margin-top: 2px;
+}
+
+/* Profile popup shown when clicking the pill */
+.profile-popup {
+  position: fixed;
+  top: calc(20px + 50px + 10px); /* below the pill */
+  left: 20px;
+  z-index: 2100;
+  min-width: 260px;
+  max-width: 420px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 12px;
+  padding: 12px 14px;
+  color: whitesmoke;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.5);
+  backdrop-filter: blur(10px);
+}
+.profile-popup .row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.profile-popup .label {
+  color: #cfcfcf;
+  font-size: 12px;
+  width: 110px;
+}
+.profile-popup .value {
+  color: white;
+  font-size: 13px;
+  word-break: break-word;
+}
+
+.edit-btn {
+  margin-top: 10px;
+  padding: 6px 12px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 6px;
+  color: whitesmoke;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.edit-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  color: white;
+}
+
+/* Small responsive tweak */
+@media (max-width: 800px) {
+  .profile-pill.expanded { width: min(260px, calc(100% - 120px)); }
+  .profile-popup { left: 12px; right: 12px; width: auto; }
+}
+
