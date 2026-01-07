@@ -10,22 +10,42 @@ const UserDetails = () => {
     const [showPinModal, setShowPinModal] = useState(false);
     const [createdCard, setCreatedCard] = useState(null);
     const [showRetryModal, setShowRetryModal] = useState(false);
+    const [showErrorModal, setShowErrorModal] = useState(false);
+    const [fileError, setFileError] = useState("");
     const [lastAccountId, setLastAccountId] = useState(null);
 
     // 1. Get User ID
+// 1. Get User ID & Clear stale image if user changed
     const [userId, setUserId] = useState(null); 
+    
     useEffect(() => {
         const storedId = localStorage.getItem('userId');
-        if (storedId) {
-            setUserId(storedId);
-        } else {
+        const finalId = storedId || 1; // Default to 1 if missing
+
+        if (!storedId) {
             console.log("No User ID found - defaulting to 1");
             setUserId(1); 
+        } else {
+            setUserId(storedId);
         }
-        // If there's a previously uploaded profile image URL, show it as preview
-        const storedProfile = localStorage.getItem('profileImageUrl');
-        if (storedProfile) setPreviewUrl(storedProfile);
+
+        // --- NEW FIX: Check if user switched ---
+        const lastActiveUser = localStorage.getItem('last_active_user');
+
+        if (lastActiveUser && lastActiveUser !== finalId.toString()) {
+            // Different user detected! Clear old profile image
+            localStorage.removeItem('profileImageUrl');
+            setPreviewUrl(null);
+        } else {
+            // Same user: Safe to show cached image
+            const storedProfile = localStorage.getItem('profileImageUrl');
+            if (storedProfile) setPreviewUrl(storedProfile);
+        }
+
+        // Update active user record
+        localStorage.setItem('last_active_user', finalId);
     }, []);
+
 
     // 2. State for Text Data
     const [formData, setFormData] = useState({
@@ -358,6 +378,24 @@ const UserDetails = () => {
                     </div>
                 </div>
             )}
+
+
+            {showErrorModal && (
+                <div className="modal-overlay">
+                    <div className="modal" style={{ border: '1px solid #ff4444', boxShadow: '0 0 15px rgba(255, 68, 68, 0.3)' }}>
+                        <h3 style={{ color: '#ff6b6b' }}>Upload Failed</h3>
+                        <p style={{ marginTop: '10px', fontSize: '0.95rem' }}>{fileError}</p>
+                        <button 
+                            onClick={() => setShowErrorModal(false)} 
+                            className="c-btn" 
+                            style={{ marginTop: '20px', backgroundColor: '#333', border: '1px solid #555' }}
+                        >
+                            Close
+                        </button>
+                    </div>
+                </div>
+            )}
+
         </section>
     );
 };

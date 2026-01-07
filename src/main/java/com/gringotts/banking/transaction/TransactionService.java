@@ -11,6 +11,11 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.UUID;
 
+/**
+ * Business Logic for Money Movement.
+ * Handles Transfers, Withdrawals, and Audit Logging.
+ */
+
 @Service
 public class TransactionService {
 
@@ -20,6 +25,15 @@ public class TransactionService {
     @Autowired
     private AccountRepository accountRepository;
 
+    /**
+     * Executes a secure money transfer between two internal accounts.
+     * Flow:
+     * 1. Validate Input (Amount > 0, Sender != Receiver).
+     * 2. Check Balance (Sender has enough money).
+     * 3. Atomic Update: Deduct from Sender, Add to Receiver.
+     * 4. Log Transaction.
+     * * ACID Guarantee: If any step fails, the entire operation rolls back.
+     */
     @Transactional
     public void transferFunds(Long fromAccountId, Long toAccountId, BigDecimal amount) {
         // 0. Self-Transfer Check
@@ -67,7 +81,10 @@ public class TransactionService {
         transactionRepository.save(transaction);
     }
 
-
+    /**
+     * Handles Withdrawals (e.g., Card Purchases).
+     * Deducts money from one account without a target account.
+     */
     // NEW METHOD: Handle Withdrawal / Card Purchase
     @Transactional
     public void withdraw(Long accountId, BigDecimal amount, String description, TransactionType type) {
@@ -101,7 +118,10 @@ public class TransactionService {
 
         transactionRepository.save(transaction);
     }
-
+    /**
+     * Retrieves transaction history for an account.
+     * Supports Pagination to handle large datasets efficiently.
+     */
     public Page<Transaction> getTransactionHistory(Long accountId, Pageable pageable) {
         return transactionRepository.findByAccountId(accountId, pageable);
     }

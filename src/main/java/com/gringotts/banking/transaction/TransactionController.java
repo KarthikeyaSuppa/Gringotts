@@ -10,15 +10,22 @@ import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
 import java.util.Map;
 
+/**
+ * REST API for Transactions.
+ * Exposes endpoints to transfer money and view history.
+ */
 @RestController
 @RequestMapping("/api/transactions")
 public class TransactionController {
 
     @Autowired
     private TransactionService transactionService;
-    // NEW ENDPOINT: Transfer Money
-    // POST /api/transactions/transfer
-    // Body: { "fromAccountId": 1, "toAccountId": 2, "amount": 50.00 }
+
+    /**
+     * Transfers money between accounts.
+     * Endpoint: POST /api/transactions/transfer
+     * Body: { "fromAccountId": 1, "toAccountId": 2, "amount": 50.00 }
+     */
     @PostMapping("/transfer")
     public ResponseEntity<?> transfer(@RequestBody Map<String, Object> request) {
         try {
@@ -33,8 +40,11 @@ public class TransactionController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-    // NEW ENDPOINT: Transaction History
-    // GET /api/transactions/{accountId}?page=0&size=10
+
+    /**
+     * Retrieves transaction history for an account.
+     * Endpoint: GET /api/transactions/{accountId}?page=0&size=10
+     */
     @GetMapping("/{accountId}")
     public ResponseEntity<Page<Transaction>> getHistory(
             @PathVariable Long accountId,

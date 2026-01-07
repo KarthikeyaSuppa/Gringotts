@@ -7,6 +7,10 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+/**
+ * Represents a registered user/customer in the system.
+ * Maps to the 'users' table.
+ */
 @Entity
 @Table(name = "users")
 public class User {
@@ -25,7 +29,7 @@ public class User {
 	private String lastName;
 
 	@Column(nullable = false)
-	private String password;
+	private String password; // BCrypt Hash
 
 	@Column(nullable = false, unique = true)
 	private String email;
@@ -53,7 +57,9 @@ public class User {
 	private LocalDateTime updatedAt;
 
 	// --- CONSTRUCTORS ---
-	public User() {}
+
+	public User() {
+	}
 
 	public User(Long id, String username, String firstName, String lastName, String password, String email, String phoneNumber, String address, LocalDate dateOfBirth, String role, String profileImageUrl, LocalDateTime createdAt, LocalDateTime updatedAt) {
 		this.id = id;
@@ -71,7 +77,7 @@ public class User {
 		this.updatedAt = updatedAt;
 	}
 
-	// --- GETTERS AND SETTERS (CRITICAL FOR BUILD) ---
+	// --- GETTERS AND SETTERS ---
 
 	public Long getId() { return id; }
 	public void setId(Long id) { this.id = id; }

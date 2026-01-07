@@ -6,6 +6,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+/**
+ * Business Logic for User Management.
+ * Handles Registration, Profile Updates, and User Lookup.
+ */
 @Service
 public class UserService {
 
@@ -19,8 +23,18 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    /**
+     * Registers a new user in the system.
+     * Flow: Controller -> UserService -> UserRepository -> DB
+     * 1. Checks if username/email exists.
+     * 2. Hashes the password using BCrypt.
+     * 3. Sets default role.
+     * 4. Saves to database.
+     *
+     * @param user The raw user object from the frontend
+     * @return The saved User entity
+     */
     public User registerUser(User user) {
-        // 1. Validation Check
         if (userRepository.existsByUsername(user.getUsername())) {
             throw new RuntimeException("Username already taken");
         }
@@ -28,41 +42,49 @@ public class UserService {
             throw new RuntimeException("Email already registered");
         }
 
-        // 2. Hash the password
         String encodedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
-
-        // 3. Force the Role
         user.setRole("ROLE_USER");
 
-        // 4. Save to Database
         return userRepository.save(user);
     }
 
-    // Used to find the user profile to edit
+    /**
+     * Finds a user by ID.
+     * Used by: Profile update logic.
+     */
     public Optional<User> getUserById(Long id) {
         return userRepository.findById(id);
     }
 
-    // Used to find user by their login name
+    /**
+     * Finds a user by Username (Returns Optional).
+     * Used by: Internal checks.
+     */
     public Optional<User> getUserByUsername(String username) {
         return userRepository.findByUsername(username);
     }
 
-    // Used to save changes (like new profile picture or address)
-    public User saveUser(User user) {
-        return userRepository.save(user);
-    }
-
-    // Check if a phone number exists (for uniqueness checks)
-    public boolean existsByPhoneNumber(String phoneNumber) {
-        if (phoneNumber == null) return false;
-        return userRepository.existsByPhoneNumber(phoneNumber);
-    }
-
+    /**
+     * Finds a user by Username (Returns Entity).
+     * Used by: AuthController and Profile Endpoints.
+     * Throws exception if not found.
+     */
     public User findByUsername(String username) {
         return userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found with username: " + username));
     }
 
+    /**
+     * Updates an existing user.
+     * Flow: Controller -> Service -> DB Update
+     */
+    public User saveUser(User user) {
+        return userRepository.save(user);
+    }
+
+    public boolean existsByPhoneNumber(String phoneNumber) {
+        if (phoneNumber == null) return false;
+        return userRepository.existsByPhoneNumber(phoneNumber);
+    }
 }

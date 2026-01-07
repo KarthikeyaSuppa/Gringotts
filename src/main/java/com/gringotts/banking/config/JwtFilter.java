@@ -16,6 +16,10 @@ import org.springframework.web.filter.OncePerRequestFilter; // Ensures filter ru
 
 import java.io.IOException;
 
+/**
+ * Filter that executes once per request to validate JWT tokens.
+ * This acts as the "Bouncer" for the application.
+ */
 @Component
 public class JwtFilter extends OncePerRequestFilter {
 
@@ -41,12 +45,11 @@ public class JwtFilter extends OncePerRequestFilter {
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             jwt = authorizationHeader.substring(7); // Remove "Bearer " prefix
             try {
-                username = jwtUtil.extractUsername(jwt);// Decode it
+                username = jwtUtil.extractUsername(jwt);
             } catch (Exception e) {
-                logger.warn("Failed to extract username from JWT: {} (request: {} {})", e.getMessage(), request.getMethod(), request.getRequestURI());
+                // Token might be expired or invalid
+                logger.warn("JWT Token could not be parsed: " + e.getMessage());
             }
-        } else {
-            logger.debug("No Authorization header or does not start with Bearer for request {} {}", request.getMethod(), request.getRequestURI());
         }
 
         // 2. Validate Token and set Security Context
@@ -56,11 +59,13 @@ public class JwtFilter extends OncePerRequestFilter {
                 UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
 
                 if (jwtUtil.validateToken(jwt, userDetails.getUsername())) {
+                    //3. Create Authentication Token
                     UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                             userDetails, null, userDetails.getAuthorities());
 
                     authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
+                    // 4. Set Authentication in Context (User is now "Logged In")
                     // This is where the user is officially "Logged In" for this request
                     SecurityContextHolder.getContext().setAuthentication(authToken);
                     logger.debug("JWT validated for user '{}' on {} {}", username, request.getMethod(), request.getRequestURI());
@@ -71,7 +76,7 @@ public class JwtFilter extends OncePerRequestFilter {
                 logger.warn("Error validating JWT or loading user: {} (request: {} {})", ex.getMessage(), request.getMethod(), request.getRequestURI());
             }
         }
-        // 7. Continue the chain (Go to the next filter or the Controller)
+        // 5. Continue the chain (Go to the next filter or the Controller)
         chain.doFilter(request, response);
     }
 }

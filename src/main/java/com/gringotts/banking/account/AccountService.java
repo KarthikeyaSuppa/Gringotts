@@ -5,14 +5,19 @@ import com.gringotts.banking.transaction.TransactionRepository;
 import com.gringotts.banking.transaction.TransactionType;
 import com.gringotts.banking.user.User;
 import com.gringotts.banking.user.UserRepository;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
+/**
+ * Manages Bank Accounts.
+ * Handles creation, balance updates, and linking transactions.
+ */
 @Service
 public class AccountService {
 
@@ -25,10 +30,15 @@ public class AccountService {
     @Autowired
     private TransactionRepository transactionRepository;
 
-    public Account deposit(Long accountId, BigDecimal amount) {
-        return deposit(accountId, amount, TransactionType.CASH_DEPOSIT);
-    }
-
+    /**
+     * Creates a new bank account for a user.
+     * Flow: User Profile Setup -> Controller -> Service -> DB.
+     * Generates a unique 12-digit account number.
+     *
+     * @param userId      The owner of the account.
+     * @param accountType "SAVINGS" or "CHECKING".
+     * @return The created Account entity.
+     */
     public Account createAccount(Long userId, String accountType) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -42,56 +52,73 @@ public class AccountService {
         return accountRepository.save(account);
     }
 
-    public java.util.List<Account> getAccountsByUser(Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-        return accountRepository.findByUserId(user.getId());
-    }
-
-    // Updated Method: Handles Deposit AND Tracking
-    @Transactional // Ensures both save() calls happen or neither does
+    /**
+     * Deposits money into an account.
+     * Flow: Controller/CardService -> Service -> DB.
+     * Updates Balance AND Creates a Transaction Record atomically.
+     *
+     * @param accountId Target account.
+     * @param amount    Amount to add.
+     * @param type      Source (CASH_DEPOSIT vs CARD_DEPOSIT).
+     * @return The updated Account entity.
+     */
+    @Transactional
     public Account deposit(Long accountId, BigDecimal amount, TransactionType type) {
         Account account = accountRepository.findById(accountId)
                 .orElseThrow(() -> new RuntimeException("Account not found"));
 
-        //1. Update Balance
+        // 1. Update Balance
         BigDecimal newBalance = account.getBalance().add(amount);
         account.setBalance(newBalance);
-        Account savedAccount= accountRepository.save(account);
+        Account savedAccount = accountRepository.save(account);
 
-        // 2. Create Transaction Record
+        // 2. Log Transaction
         Transaction transaction = new Transaction();
         transaction.setReferenceId(UUID.randomUUID().toString());
         transaction.setAccount(account);
-        transaction.setTargetAccount(null); // No target for cash deposits
+        transaction.setTargetAccount(null);
         transaction.setAmount(amount);
-        transaction.setType(type); // Uses the passed type (CARD_DEPOSIT or CASH_DEPOSIT) Enum type
+        transaction.setType(type);
         transaction.setDescription("Deposit via " + (type == TransactionType.CARD_DEPOSIT ? "ATM" : "Branch"));
 
         transactionRepository.save(transaction);
 
         return savedAccount;
-
     }
 
+    /**
+     * Overloaded method for default Cash Deposits.
+     */
+    public Account deposit(Long accountId, BigDecimal amount) {
+        return deposit(accountId, amount, TransactionType.CASH_DEPOSIT);
+    }
+
+    /**
+     * Fetches all accounts belonging to a specific user.
+     */
+    public List<Account> getAccountsByUser(Long userId) {
+        return accountRepository.findByUserId(userId);
+    }
+
+    /**
+     * Deletes an account (Used for Rollback scenarios).
+     */
+    public void deleteAccount(Long accountId) {
+        if (accountRepository.existsById(accountId)) {
+            accountRepository.deleteById(accountId);
+        }
+    }
+
+    /**
+     * Helper: Generates a unique 12-digit number.
+     * Uses recursion to ensure uniqueness.
+     */
     private String generateAccountNumber() {
-        //Why not `new Random()`?** In a web server (like Tomcat), hundreds of users might try to open accounts at the same time (multi-threading).
-        // The standard `Random` class has "contention" (threads fight over it), making it slow. `ThreadLocalRandom` gives each thread its own private generator.
-        // It is much faster for high-concurrency apps like banking.
         long number = ThreadLocalRandom.current().nextLong(100000000000L, 999999999999L);
-        //Why? We store account numbers as Strings in the database (`VARCHAR`).
-        // This preserves leading zeros (if we had them) and prevents the database from trying to do math on account numbers
         String accStr = String.valueOf(number);
         if (accountRepository.existsByAccountNumber(accStr)) {
             return generateAccountNumber();
         }
         return accStr;
-    }
-
-    public void deleteAccount(Long accountId) {
-        if (!accountRepository.existsById(accountId)) {
-            throw new RuntimeException("Account not found");
-        }
-        accountRepository.deleteById(accountId);
     }
 }
