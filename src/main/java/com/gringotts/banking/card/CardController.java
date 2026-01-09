@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.Map;
+import java.util.List;
+
 
 /**
  * REST API for Card Operations.
@@ -93,5 +95,11 @@ public class CardController {
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
+    }
+
+    // ✅ ADD THIS NEW ENDPOINT
+    @GetMapping("/by-user/{userId}")
+    public ResponseEntity<List<CardResponse>> getCardsByUser(@PathVariable Long userId) {
+        return ResponseEntity.ok(cardService.getCardsByUser(userId));
     }
 }

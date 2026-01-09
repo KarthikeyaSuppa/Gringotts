@@ -47,6 +47,14 @@ public class Transaction {
     @Column(updatable = false)
     private LocalDateTime timestamp;
 
+    // ... existing fields ...
+
+    // ✅ NEW: Store balance snapshot
+    private BigDecimal sourceBalanceAfter; // Balance of the 'account' (sender) after this tx
+    private BigDecimal targetBalanceAfter; // Balance of the 'targetAccount' (receiver) after this tx
+
+
+
     // --- CONSTRUCTORS ---
 
     public Transaction() {
@@ -77,4 +85,11 @@ public class Transaction {
 
     public LocalDateTime getTimestamp() { return timestamp; }
     public void setTimestamp(LocalDateTime timestamp) { this.timestamp = timestamp; }
+
+    // Getters and Setters
+    public BigDecimal getSourceBalanceAfter() { return sourceBalanceAfter; }
+    public void setSourceBalanceAfter(BigDecimal sourceBalanceAfter) { this.sourceBalanceAfter = sourceBalanceAfter; }
+
+    public BigDecimal getTargetBalanceAfter() { return targetBalanceAfter; }
+    public void setTargetBalanceAfter(BigDecimal targetBalanceAfter) { this.targetBalanceAfter = targetBalanceAfter; }
 }

@@ -1,5 +1,6 @@
 package com.gringotts.banking.config;
 
+import org.springframework.http.HttpMethod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -66,6 +67,8 @@ public class SecurityConfig {
                         // Public Endpoints: Login & Register
                         .requestMatchers("/api/users/register", "/api/auth/login", "/api/auth/logout").permitAll()
                         .requestMatchers("/uploads/**").permitAll() // Allow browsers to load images
+                        // ✅ FIX: Explicitly allow OPTIONS requests (Preflight)
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         // All other endpoints (Accounts, Transactions, Cards) are now LOCKED.
                         // You must send a valid JWT Token in the header to access them.
                         .anyRequest().authenticated()

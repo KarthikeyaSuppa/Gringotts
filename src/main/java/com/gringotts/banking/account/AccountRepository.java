@@ -16,4 +16,7 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
 
     // Find by Account Number (Useful for transfers later)
     Optional<Account> findByAccountNumber(String accountNumber);
+
+    // Fetch only active accounts for the dashboard
+    List<Account> findByUserIdAndStatus(Long userId, String status);
 }

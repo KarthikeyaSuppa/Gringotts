@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+//import axios from 'axios';
+import api from './api';
 
 const ProfilePopup = ({ onClose }) => {
   const [userDetails, setUserDetails] = useState({});
 
   useEffect(() => {
-    axios.get('/api/user/profile')
+    // ✅ Use 'api' instead of 'axios'
+    // ✅ Use correct URL '/api/users/profile' (plural)
+    api.get('/api/users/profile')
       .then(response => setUserDetails(response.data))
       .catch(error => console.error('Error fetching user details:', error));
   }, []);

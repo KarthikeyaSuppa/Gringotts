@@ -5,6 +5,8 @@ import Signup from './Signup';
 import UserDetails from './UserDetails';
 import Dashboard from './Dashboard'; // Assuming you have this, or we will create a placeholder
 import './App.css'; 
+import Pay from './Pay';
+import Transactions from './Transactions';
 
 // --- GUARD COMPONENT ---
 // This checks if a token exists. If not, it kicks you back to Login.
@@ -30,7 +32,24 @@ function App() {
             </PrivateRoute>
           } 
         />
-        
+
+        <Route 
+          path="/pay" 
+          element={
+            <PrivateRoute>
+              <Pay />
+            </PrivateRoute>
+          } 
+        />
+        <Route 
+          path="/transactions" 
+          element={
+            <PrivateRoute>
+              <Transactions />
+            </PrivateRoute>
+          } 
+        />
+
         <Route 
           path="/dashboard" 
           element={

@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
-
+import java.util.ArrayList;
 /**
  * Business Logic for Card Operations.
  * Handles Issuance, PIN Validation, and Payments.
@@ -74,6 +74,36 @@ public class CardService {
         return response;
     }
 
+
+    public List<CardResponse> getCardsByUser(Long userId) {
+        // 1. Find all accounts for this user
+        List<Account> accounts = accountRepository.findByUserId(userId);
+
+        List<CardResponse> responses = new ArrayList<>();
+
+        // 2. For each account, find its cards
+        for (Account account : accounts) {
+            List<Card> cards = cardRepository.findByAccountId(account.getId());
+
+            for (Card card : cards) {
+                CardResponse res = new CardResponse();
+                res.setId(card.getId());
+                res.setAccountId(account.getId());
+                res.setCardNumber(card.getCardNumber());
+                res.setCvv(card.getCvv());
+                res.setExpiry(card.getExpiryDate().toString());
+                res.setCardType(card.getCardType());
+
+                // NOTE: We cannot return the 'tempPin' here because it is hashed in the DB.
+                // We return null or masked value. The user only sees the PIN once upon creation.
+                res.setTempPin("****");
+
+                responses.add(res);
+            }
+        }
+        return responses;
+    }
+
     /**
      * Performs an ATM Deposit using Card credentials.
      * Flow: ATM -> CardService (Validate PIN) -> AccountService (Add Money).
@@ -107,10 +137,6 @@ public class CardService {
         );
     }
 
-    public List<CardResponse> getCardsByUser(Long userId) {
-        // Placeholder for future implementation: Fetch all cards for a user
-        return List.of();
-    }
 
     // --- PRIVATE HELPERS ---
 

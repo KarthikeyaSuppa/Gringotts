@@ -94,19 +94,28 @@ public class AccountService {
     }
 
     /**
-     * Fetches all accounts belonging to a specific user.
+     * Fetches all accounts belonging to a specific user if only ACTIVE.
      */
     public List<Account> getAccountsByUser(Long userId) {
-        return accountRepository.findByUserId(userId);
+        // Return only ACTIVE accounts
+        return accountRepository.findByUserIdAndStatus(userId, "ACTIVE");
     }
 
     /**
-     * Deletes an account (Used for Rollback scenarios).
+     * Deletes an account by making the status as closed.
      */
     public void deleteAccount(Long accountId) {
-        if (accountRepository.existsById(accountId)) {
-            accountRepository.deleteById(accountId);
+        Account account = accountRepository.findById(accountId)
+                .orElseThrow(() -> new RuntimeException("Account not found"));
+
+        // Check if already closed
+        if ("CLOSED".equals(account.getStatus())) {
+            throw new RuntimeException("Account is already closed");
         }
+
+        // Soft Delete Logic
+        account.setStatus("CLOSED");
+        accountRepository.save(account);
     }
 
     /**

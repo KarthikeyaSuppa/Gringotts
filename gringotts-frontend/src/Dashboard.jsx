@@ -178,19 +178,19 @@ const Dashboard = () => {
             {/* Right Navbar (visible) */}
             <div className="right-navbar show">
                 <div className="nav-icon" role="button" title="Settings" onClick={() => navigate('/settings')}>
-                    <img src="/img/Settings.ico" alt="Settings" style={{ width: '80%', height: '80%', objectFit: 'contain' }} />
+                    <img src="/img/Settings.ico" alt="Settings"  />
                 </div>
                 <div className="nav-icon" role="button" title="Cards" onClick={() => navigate('/cards')}>
-                    <img src="/img/Card.ico" alt="Cards" style={{ width: '80%', height: '80%', objectFit: 'contain' }} />
+                    <img src="/img/Card.ico" alt="Cards"  />
                 </div>
                 <div className="nav-icon" role="button" title="Transactions" onClick={() => navigate('/transactions')}>
-                    <img src="/img/Transaction_History.ico" alt="Transactions" style={{ width: '80%', height: '80%', objectFit: 'contain' }} />
+                    <img src="/img/Transaction_History.ico" alt="Transactions"  />
                 </div>
                 <div className="nav-icon" role="button" title="Pay" onClick={() => navigate('/pay')}>
-                    <img src="/img/Pay.ico" alt="Pay" style={{ width: '80%', height: '80%', objectFit: 'contain' }} />
+                    <img src="/img/Pay.ico" alt="Pay"  />
                 </div>
                 <div className="nav-icon logout-btn" role="button" title="Logout" onClick={handleLogout}>
-                    <img src="/img/Logout.ico" alt="Logout" style={{ width: '80%', height: '80%', objectFit: 'contain' }} />
+                    <img src="/img/Logout.ico" alt="Logout"  />
                 </div>
              </div>
 

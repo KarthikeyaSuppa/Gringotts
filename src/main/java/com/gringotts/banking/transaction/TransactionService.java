@@ -8,6 +8,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 import java.math.BigDecimal;
 import java.util.UUID;
 
@@ -26,6 +28,20 @@ public class TransactionService {
     private AccountRepository accountRepository;
 
     /**
+     * NEW: Transfer using Account Number for the destination.
+     * This looks up the account ID from the number, then calls the main logic.
+     */
+    @Transactional
+    public void transferFunds(Long fromAccountId, String toAccountNumber, BigDecimal amount) {
+        // 1. Find the Target Account ID by Number
+        Account toAccount = accountRepository.findByAccountNumber(toAccountNumber)
+                .orElseThrow(() -> new RuntimeException("Target Account Number not found"));
+
+        // 2. Delegate to the main transfer logic
+        transferFunds(fromAccountId, toAccount.getId(), amount);
+    }
+
+    /**
      * Executes a secure money transfer between two internal accounts.
      * Flow:
      * 1. Validate Input (Amount > 0, Sender != Receiver).
@@ -36,6 +52,7 @@ public class TransactionService {
      */
     @Transactional
     public void transferFunds(Long fromAccountId, Long toAccountId, BigDecimal amount) {
+
         // 0. Self-Transfer Check
         if (fromAccountId.equals(toAccountId)) {
             throw new RuntimeException("Cannot transfer funds to the same account");
@@ -47,11 +64,19 @@ public class TransactionService {
         }
 
         // 2. Fetch Accounts
-        Account fromAccount = accountRepository.findById(fromAccountId)
+            Account fromAccount = accountRepository.findById(fromAccountId)
                 .orElseThrow(() -> new RuntimeException("Sender account not found"));
 
         Account toAccount = accountRepository.findById(toAccountId)
                 .orElseThrow(() -> new RuntimeException("Receiver account not found"));
+
+        // ✅ NEW: Status Checks
+        if (!"ACTIVE".equals(fromAccount.getStatus())) {
+            throw new RuntimeException("Sender account is CLOSED. Transaction denied.");
+        }
+        if (!"ACTIVE".equals(toAccount.getStatus())) {
+            throw new RuntimeException("Target account is CLOSED. Transaction denied.");
+        }
 
         // 3. Check Balance
         if (fromAccount.getBalance().compareTo(amount) < 0) {
@@ -77,7 +102,9 @@ public class TransactionService {
         transaction.setType(TransactionType.TRANSFER);
 
         transaction.setDescription("Transfer to " + toAccount.getAccountNumber());
-
+        // ✅ NEW: Save the running balances
+        transaction.setSourceBalanceAfter(fromAccount.getBalance());
+        transaction.setTargetBalanceAfter(toAccount.getBalance());
         transactionRepository.save(transaction);
     }
 
@@ -97,6 +124,11 @@ public class TransactionService {
         Account account = accountRepository.findById(accountId)
                 .orElseThrow(() -> new RuntimeException("Account not found"));
 
+        // ✅ NEW: Status Check
+        if (!"ACTIVE".equals(account.getStatus())) {
+            throw new RuntimeException("Account is CLOSED. Withdrawal denied.");
+        }
+
         // 3. Check Balance
         if (account.getBalance().compareTo(amount) < 0) {
             throw new RuntimeException("Insufficient funds");
@@ -115,7 +147,8 @@ public class TransactionService {
         // OR store positive and rely on Type. Let's keep positive.
         transaction.setType(type);
         transaction.setDescription(description);
-
+        // ✅ NEW: Save the running balance
+        transaction.setSourceBalanceAfter(account.getBalance());
         transactionRepository.save(transaction);
     }
     /**
