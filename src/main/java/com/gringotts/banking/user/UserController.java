@@ -130,4 +130,15 @@ public class UserController {
             return ResponseEntity.badRequest().body("Upload failed: " + e.getMessage());
         }
     }
+
+    // ... inside UserController ...
+    @PutMapping("/{id}/update")
+    public ResponseEntity<?> updateProfile(@PathVariable Long id, @RequestBody UserDTO userDTO) {
+        try {
+            User updated = userService.updateUserProfile(id, userDTO);
+            return ResponseEntity.ok(updated);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Update failed: " + e.getMessage());
+        }
+    }
 }

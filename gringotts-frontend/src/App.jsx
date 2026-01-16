@@ -7,6 +7,8 @@ import Dashboard from './Dashboard'; // Assuming you have this, or we will creat
 import './App.css'; 
 import Pay from './Pay';
 import Transactions from './Transactions';
+import Cards from './Cards';
+import Settings from './Settings';
 
 // --- GUARD COMPONENT ---
 // This checks if a token exists. If not, it kicks you back to Login.
@@ -49,6 +51,23 @@ function App() {
             </PrivateRoute>
           } 
         />
+
+        <Route 
+          path="/cards" 
+          element={
+            <PrivateRoute>
+              <Cards />
+            </PrivateRoute>
+          } 
+        />
+
+        <Route 
+          path="/settings" 
+          element={
+            <PrivateRoute>
+              <Settings />
+            </PrivateRoute>
+          } />
 
         <Route 
           path="/dashboard" 

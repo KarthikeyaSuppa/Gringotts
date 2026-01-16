@@ -1,5 +1,7 @@
 package com.gringotts.banking.card;
 
+import java.math.BigDecimal;
+
 /**
  * Data Transfer Object (DTO) for Card Creation.
  * * Purpose:
@@ -16,6 +18,10 @@ public class CardResponse {
     private String expiry;
     private String tempPin; // Sensitive: Shown only once
     private String cardType;
+    private BigDecimal transactionLimit; // ✅ Add this
+    private BigDecimal creditLimit; // ✅ Add this
+    private String status;
+
 
     // --- GETTERS AND SETTERS ---
 
@@ -73,5 +79,23 @@ public class CardResponse {
 
     public void setCardType(String cardType) {
         this.cardType = cardType;
+    }
+
+    public BigDecimal getTransactionLimit() {
+        return transactionLimit;
+    }
+    public void setTransactionLimit(BigDecimal transactionLimit) {
+        this.transactionLimit = transactionLimit;
+    }
+
+    public BigDecimal getCreditLimit() { return creditLimit; }
+    public void setCreditLimit(BigDecimal creditLimit) { this.creditLimit = creditLimit; }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

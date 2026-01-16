@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -52,6 +53,15 @@ public class Card {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
+    // ✅ NEW: Transaction Limit (Default 5000)
+    @Column(name = "transaction_limit")
+    private BigDecimal transactionLimit = new BigDecimal("5000.00");
+
+    @Column(name = "credit_limit")
+    private BigDecimal creditLimit;
+
+
+
     // --- CONSTRUCTORS ---
 
     public Card() {
@@ -88,4 +98,11 @@ public class Card {
 
     public LocalDateTime getUpdatedAt() { return updatedAt; }
     public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
+
+    public BigDecimal getTransactionLimit() { return transactionLimit; }
+    public void setTransactionLimit(BigDecimal transactionLimit) { this.transactionLimit = transactionLimit; }
+
+    public BigDecimal getCreditLimit() { return creditLimit; }
+    public void setCreditLimit(BigDecimal creditLimit) { this.creditLimit = creditLimit; }
+
 }

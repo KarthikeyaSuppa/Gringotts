@@ -22,6 +22,9 @@ import java.util.concurrent.ThreadLocalRandom;
 public class AccountService {
 
     @Autowired
+    private com.gringotts.banking.card.CardRepository cardRepository;
+
+    @Autowired
     private AccountRepository accountRepository;
 
     @Autowired
@@ -113,9 +116,16 @@ public class AccountService {
             throw new RuntimeException("Account is already closed");
         }
 
-        // Soft Delete Logic
+        // 1.Soft Delete Logic
         account.setStatus("CLOSED");
         accountRepository.save(account);
+
+        // 2. Deactivate all linked cards
+        List<com.gringotts.banking.card.Card> cards = cardRepository.findByAccountId(accountId);
+        for (com.gringotts.banking.card.Card card : cards) {
+            card.setStatus("INACTIVE");
+            cardRepository.save(card);
+        }
     }
 
     /**

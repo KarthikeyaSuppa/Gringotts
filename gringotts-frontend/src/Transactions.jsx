@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from './api';
 import './App.css'; 
+import TransactionButton from './TransactionButton';
+import PaymentStatus from './PaymentStatus'; 
 
 const Transactions = () => {
     const navigate = useNavigate();
@@ -149,7 +151,6 @@ const Transactions = () => {
             <div className="UserDetails-box tx-container">
                 <div className="tx-header">
                     <h2>Transactions</h2>
-                    
                     {/* FILTERS BAR */}
                     <div className="filter-bar">
                         <input type="date" value={filterStart} onChange={e => setFilterStart(e.target.value)} />
@@ -220,15 +221,19 @@ const Transactions = () => {
             {selectedTx && (
                 <div className="tx-modal-overlay" onClick={() => setSelectedTx(null)}>
                     <div className="modal tx-modal" onClick={e => e.stopPropagation()}>
-                        <h3 className={isDebit(selectedTx) ? 'red-text' : 'green-text'}>
-                            {isDebit(selectedTx) ? 'Money Sent' : 'Money Received'}
-                        </h3>
                         
-                        <div className={`rubik-number big-amount ${isDebit(selectedTx) ? 'red-text' : 'green-text'}`}>
-                            {isDebit(selectedTx) ? '-' : '+'}${selectedTx.amount.toFixed(2)}
+                        {/* 1. REMOVED the top Header and Big Amount as requested */}
+                        {/* 3. ANIMATION (Showing Amount as Title) */}
+                        <div style={{ marginBottom: 20, transform: 'scale(0.9)' }}>
+                            <PaymentStatus 
+                                status="success" 
+                                theme={isDebit(selectedTx) ? 'red' : 'green'} 
+                                // ✅ NEW: Display Amount here instead of "Outgoing Transfer"
+                                title={`${isDebit(selectedTx) ? '-' : '+'}$${selectedTx.amount.toFixed(2)}`}
+                            />
                         </div>
-
-                        <div className="tx-details-grid">
+                        {/* 2. Transaction Details */}
+                        <div className="tx-details-grid" style={{ marginTop: '10px' }}>
                             <label>Description:</label>
                             <span>{selectedTx.description}</span>
 
@@ -250,7 +255,6 @@ const Transactions = () => {
                             
                             <label>Balance After:</label>
                             <span className="rubik-number" style={{color: 'white', fontWeight: 'bold'}}>
-                                {/* Display correct running balance based on perspective */}
                                 ${ (isDebit(selectedTx) ? selectedTx.sourceBalanceAfter : selectedTx.targetBalanceAfter)?.toFixed(2) || '---' }
                             </span>
                         </div>

@@ -1,21 +1,24 @@
-/* style.css */
+/* ==========================================================================
+   1. GLOBAL & RESETS (Your Original Code)
+   ========================================================================== */
 @import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&family=Playwrite+NO:wght@100..400&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&display=swap');
 
-*{
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     font-family: 'Poppins', sans-serif;   
 }
 
-section{
+section {
     width: 100%;
     height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
     /* Replace the URL below with your actual image file name */
-    background-image: url('img/Back-G.jpg');
+    background-image: url('/img/Back-G.jpg');
     /* Scales the image to cover the entire screen */
     background-attachment: fixed; /* CRITICAL */ /* Keeps the background fixed during scrolling */     /* Scale image to cover the entire screen */
     background-size: cover;
@@ -31,6 +34,9 @@ section{
     margin: 0;
 }
 
+/* ==========================================================================
+   2. AUTH PAGES (Login/Signup)
+   ========================================================================== */
 .login-box, .signup-box {
   width: 325px;
   height: auto;
@@ -91,6 +97,9 @@ h2 {
     font-style: normal;
 }
 
+/* ==========================================================================
+   3. INPUTS & FORMS
+   ========================================================================== */
 .input-box {
     position: relative;
     width: 265px;
@@ -221,6 +230,9 @@ h2 {
     text-decoration: underline;
 }
 
+/* ==========================================================================
+   4. BUTTONS
+   ========================================================================== */
 .btn { 
     width: 100%;
     padding: 8px; 
@@ -252,6 +264,28 @@ h2 {
     transform: translateY(0); 
 }
 
+.c-btn {
+    width: 35%;
+    padding: 8px;
+    margin-top: 7px;
+    display: block; 
+    margin-left: auto;
+    margin-right: auto;
+    /* Use public path to ensure correct resolution in Vite */
+    background-image: url('/img/Back-G.jpg');
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    font-size: 13px;
+    font-family: "Playwrite NO", cursive;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 8px;
+    color: white;
+    backdrop-filter: blur(10px);
+}
+
 .register-link{
     margin: 10px 0;
     font-size: 0.9em;
@@ -269,7 +303,9 @@ h2 {
     text-decoration: underline;
 }   
 
-/* ... (UserDetails section remains unchanged) ... */
+/* ==========================================================================
+   5. USER DETAILS PAGE
+   ========================================================================== */
 #U-Home {
     width: 100%;
     height: 100vh;
@@ -365,30 +401,10 @@ h2 {
     font-family: 'Poppins', sans-serif;
 }
 
-.c-btn {
-    width: 35%;
-    padding: 8px;
-    margin-top: 7px;
-    display: block; 
-    margin-left: auto;
-    margin-right: auto;
-    /* Use public path to ensure correct resolution in Vite */
-    background-image: url('/img/Back-G.jpg');
-    background-position: center;
-    background-size: cover;
-    background-repeat: no-repeat;
-    font-size: 13px;
-    font-family: "Playwrite NO", cursive;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 8px;
-    color: white;
-    backdrop-filter: blur(10px);
-}
 
-
-/* --- RIGHT SIDE NAVBAR (Glassmorphism) ---*/
+/* ==========================================================================
+   6. NAVBAR & NAVIGATION
+   ========================================================================== */
 .right-navbar {
     position: fixed;
     top: 0;
@@ -487,8 +503,11 @@ h2 {
     transform: scale(1.2);
     color: white;
 }
-/* --- ANIMATION CLASSES (Triggered on Continue) --- */
 
+
+/* ==========================================================================
+   7. DASHBOARD ANIMATIONS
+   ========================================================================== */
 /* 1. The Form Box Minimizing to the Top-Left (Sequential Step 2) */
 /* It moves from center (50vw, 50vh) to the icon position (20px, 20px) */
 .UserDetails-box.minimized {
@@ -580,6 +599,9 @@ h2 {
     letter-spacing: 0.6px;
 }
 
+/* ==========================================================================
+   8. PROFILE ELEMENTS (Pill & Popup)
+   ========================================================================== */
 /* Profile pill (top-left) - starts as a circle, expands into a pill showing welcome text */
 .profile-pill {
   position: fixed;
@@ -700,8 +722,9 @@ h2 {
   .profile-popup { left: 12px; right: 12px; width: auto; }
 }
 
-/* --- PAY PAGE STYLES --- */
-
+/* ==========================================================================
+   9. PAY PAGE
+   ========================================================================== */
 /* Adjust box size for Pay page */
 .pay-box {
     min-height: 480px;
@@ -815,8 +838,9 @@ h2 {
     padding-right: 20px;
 }
 
-/* --- TRANSACTIONS PAGE --- */
-
+/* ==========================================================================
+   10. TRANSACTIONS PAGE
+   ========================================================================== */
 .tx-container {
     display: flex;
     flex-direction: column;
@@ -1037,4 +1061,1073 @@ h2 {
     color: white;
     font-weight: 600;
     text-shadow: 0 0 10px rgba(255,255,255,0.1);
+}
+
+/* ==========================================================================
+   11. CARDS PAGE & LAYOUT
+   ========================================================================== */
+.cards-page-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 80px;
+    width: 80%;
+    max-width: 1200px;
+    flex-wrap: wrap;
+}
+
+/* --- SETTINGS BOX (Right Side) --- */
+.card-settings-box {
+    width: 400px;
+    background: rgba(255, 255, 255, 0.1); /* Lighter glass */
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.limit-info {
+    text-align: right;
+    font-size: 0.85em;
+    color: #aaa;
+    margin-top: -15px;
+    margin-bottom: 20px;
+}
+.limit-info strong { color: #90ee90; }
+
+.hint-text {
+    text-align: center;
+    margin-top: 15px;
+    font-size: 0.8em;
+    color: rgba(255,255,255,0.4);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+/* --- 3D FLIP CARD (Left Side) --- */
+.card-visual-section {
+    perspective: 1000px; /* Essential for 3D effect */
+}
+
+.glass-card-wrapper {
+    width: 360px;
+    height: 230px;
+}
+
+.glass-card {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d; /* Allows inner faces to flip */
+    transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border-radius: 16px;
+    cursor: pointer;
+}
+
+/* Flip Trigger */
+.glass-card-wrapper:hover .glass-card {
+    transform: rotateY(180deg);
+}
+
+/* --- CARD FACES (Front & Back) --- */
+.card-face {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    -webkit-backface-visibility: hidden; /* Hides back when facing away */
+    backface-visibility: hidden;
+    border-radius: 16px;
+    padding: 25px;
+    overflow: hidden;
+    
+    /* GLASS EFFECT (Inspired by code snippet 1) */
+    background: rgba(20, 20, 20, 0.6); /* Dark base */
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.5), inset 0 0 20px rgba(255,255,255,0.05);
+}
+
+/* --- FRONT DESIGN --- */
+.card-front {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+/* Gold Glow Border Animation (Inspired by code snippet 2) */
+.card-border-glow {
+    position: absolute;
+    inset: 0;
+    border-radius: 16px;
+    padding: 2px; /* Border width */
+    background: linear-gradient(45deg, transparent, rgba(255, 215, 0, 0.6), transparent);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0.5;
+    animation: goldRotate 4s linear infinite;
+}
+
+@keyframes goldRotate {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 100% 50%; }
+}
+
+.card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card-chip {
+    width: 45px;
+    height: 35px;
+    background: linear-gradient(135deg, #d4af37, #f7ef8a);
+    border-radius: 6px;
+    opacity: 0.9;
+}
+
+.bank-logo {
+    font-family: 'Dancing Script', cursive;
+    font-size: 1.5em;
+    color: whitesmoke;
+    text-shadow: 0 2px 5px rgba(0,0,0,0.5);
+}
+
+.card-number {
+    font-family: 'Rubik', monospace;
+    font-size: 1.6em;
+    letter-spacing: 2px;
+    color: white;
+    text-align: center;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.4);
+    z-index: 2;
+}
+
+.card-details {
+    display: flex;
+    justify-content: space-between;
+    color: rgba(255,255,255,0.8);
+    font-size: 0.8em;
+    text-transform: uppercase;
+}
+.card-details strong {
+    display: block;
+    color: white;
+    font-size: 1.1em;
+    margin-top: 4px;
+}
+
+/* --- BACK DESIGN --- */
+.card-back {
+    transform: rotateY(180deg);
+    padding: 0; /* Reset padding for strip */
+    background: rgba(10, 10, 10, 0.85); /* Darker back */
+}
+
+.magnetic-strip {
+    width: 100%;
+    height: 45px;
+    background: #000;
+    margin-top: 25px;
+}
+
+.signature-strip {
+    width: 80%;
+    height: 35px;
+    background: #eee;
+    margin: 15px auto;
+    border-radius: 4px;
+    color: #333;
+    display: flex;
+    align-items: center;
+    padding-left: 10px;
+    font-family: 'Dancing Script', cursive;
+    font-size: 1.2em;
+}
+
+.cvv-box {
+    text-align: right;
+    padding-right: 35px;
+    color: white;
+}
+.cvv-text {
+    font-family: 'Rubik', monospace;
+    font-size: 1.2em;
+    background: white;
+    color: black;
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+}
+
+.back-text {
+    position: absolute;
+    bottom: 15px;
+    width: 100%;
+    text-align: center;
+    font-size: 0.6em;
+    color: rgba(255,255,255,0.4);
+    padding: 0 20px;
+}
+
+/* --- CARD SWITCHER --- */
+.card-switcher {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.mini-card {
+    width: 50px;
+    height: 32px;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #aaa;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.mini-card.active {
+    background: rgba(255, 215, 0, 0.2);
+    border-color: #ffd700;
+    color: #ffd700;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(255, 215, 0, 0.2);
+}
+
+.mini-card:hover {
+    background: rgba(255,255,255,0.2);
+}
+
+/* --- CARD TYPE SKINS --- */
+.card-type-label {
+    font-size: 0.6em;
+    color: rgba(255,255,255,0.7);
+    letter-spacing: 1px;
+    margin-top: -5px;
+}
+
+/* Debit Skin (Standard) */
+.debit-skin {
+    background: rgba(20, 20, 20, 0.6);
+}
+
+/* Credit Skin (Platinum/Fancy) */
+.credit-skin {
+    background: linear-gradient(135deg, rgba(40, 40, 40, 0.8), rgba(80, 80, 80, 0.6));
+    border: 1px solid rgba(255, 255, 255, 0.4);
+}
+.credit-skin .card-border-glow {
+    background: linear-gradient(45deg, transparent, rgba(192, 192, 192, 0.8), transparent); /* Silver Glow */
+}
+
+/* --- APPLY BUTTON --- */
+.apply-cc-btn {
+    background: linear-gradient(90deg, #d4af37, #f7ef8a);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    color: #333;
+    font-weight: bold;
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+    box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
+    transition: 0.3s;
+}
+
+.apply-cc-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 5px 20px rgba(212, 175, 55, 0.6);
+}
+
+/* --- CREDIT LIMIT DISPLAY --- */
+.credit-limit-display {
+    text-align: center;
+    margin-bottom: 20px;
+    background: rgba(255,255,255,0.05);
+    padding: 15px;
+    border-radius: 10px;
+}
+
+.credit-limit-display span {
+    font-size: 0.8em;
+    color: #ccc;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.big-limit {
+    font-size: 1.8em;
+    color: #fff;
+    font-weight: 600;
+    margin-top: 5px;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+}
+
+/* CREDIT CARD MANAGEMENT DASHBOARD */
+.credit-dashboard {
+    margin-top: -10px;
+}
+
+.cd-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.billing-info {
+    background: rgba(255,255,255,0.05);
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 0.85em;
+    color: #ddd;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.pay-bill-section h3 {
+    font-size: 1.1em;
+    color: white;
+    margin-bottom: 15px;
+    font-weight: 500;
+}
+
+
+/* ==========================================================================
+   12. OVERRIDES & FIXES (Appended New Styles)
+   ========================================================================== */
+
+/* Fix Dropdown Overlap - Adjusted specificity to override default .input-box rules */
+.dropdown-box {
+    margin-top: 30px !important; /* Push down to make room for label */
+    margin-bottom: 25px !important;
+    border: none !important; /* Remove input-box border */
+    padding: 0 !important;
+}
+
+.static-label {
+    position: absolute;
+    top: -22px; /* Move label UP out of the box */
+    left: 2px;
+    font-size: 0.75em;
+    color: rgba(255, 255, 255, 0.7);
+    pointer-events: none;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.select-wrapper {
+    position: relative;
+    border: 1.5px solid rgba(255, 255, 255, 0.5);
+    border-radius: 7px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.1);
+}
+
+.select-wrapper select {
+    width: 100%;
+    background: transparent;
+    border: none;
+    color: white;
+    outline: none;
+    padding: 0 10px;
+    font-size: 1em;
+    cursor: pointer;
+    font-family: 'Rubik', sans-serif;
+}
+
+.select-wrapper select option {
+    background-color: #222; /* Dark background for options */
+    color: white;
+}
+
+
+/* --- ANIMATED TRANSACTION BUTTON CSS --- */
+/* Used in TransactionButton.jsx */
+.tx-anim-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 0px;
+  transform: scale(0.85); /* Slightly smaller to fit header */
+  transform-origin: right center;
+}
+
+.tx-anim-container {
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(5px);
+  display: flex;
+  width: 260px;
+  height: 80px;
+  position: relative;
+  border-radius: 6px;
+  transition: 0.3s ease-in-out;
+  cursor: pointer;
+}
+
+.tx-anim-container:hover {
+  transform: scale(1.03);
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.tx-left-side {
+  background-color: #2a2a2a; /* Dark Machine */
+  width: 90px;
+  height: 100%;
+  border-radius: 4px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.tx-right-side {
+  width: calc(100% - 90px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-right: 15px;
+}
+
+.tx-arrow { width: 15px; height: 15px; }
+
+.tx-new {
+  font-size: 16px;
+  font-family: 'Rubik', sans-serif;
+  color: white;
+  margin-left: 15px;
+  font-weight: 500;
+}
+
+/* Animated Card (Inside Button) */
+.tx-card {
+  width: 50px;
+  height: 32px;
+  background-color: #d4af37; /* Gringotts Gold */
+  border-radius: 4px;
+  position: absolute;
+  display: flex;
+  z-index: 10;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 2px 2px 5px rgba(0,0,0,0.5);
+}
+
+.tx-card-line {
+  width: 45px;
+  height: 8px;
+  background-color: #f7ef8a; /* Light Gold */
+  border-radius: 2px;
+  margin-top: 5px;
+}
+
+.tx-buttons {
+  width: 6px;
+  height: 6px;
+  background-color: #333;
+  box-shadow: 0 -8px 0 0 #333, 0 8px 0 0 #333;
+  border-radius: 50%;
+  transform: rotate(90deg);
+  margin: 8px 0 0 -20px;
+}
+
+.tx-anim-container:hover .tx-card {
+  animation: tx-slide-top 1.2s cubic-bezier(0.645, 0.045, 0.355, 1) both;
+}
+
+/* Renamed to avoid conflict with existing slide-top */
+@keyframes tx-slide-top {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-50px) rotate(90deg); }
+  60% { transform: translateY(-50px) rotate(90deg); }
+  100% { transform: translateY(-6px) rotate(90deg); }
+}
+
+/* Machine Animation (Inside Button) */
+.tx-post {
+  width: 45px;
+  height: 55px;
+  background-color: #444;
+  position: absolute;
+  z-index: 11;
+  bottom: 0px;
+  top: 80px;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.tx-post-line {
+  width: 35px;
+  height: 6px;
+  background-color: #222;
+  position: absolute;
+  border-radius: 0px 0px 3px 3px;
+  right: 5px;
+  top: 5px;
+}
+
+.tx-screen {
+  width: 35px;
+  height: 18px;
+  background-color: #000;
+  position: absolute;
+  top: 16px;
+  right: 5px;
+  border-radius: 2px;
+  border: 1px solid #333;
+}
+
+.tx-dollar {
+  position: absolute;
+  font-size: 12px;
+  width: 100%;
+  left: 0;
+  top: 1px;
+  color: #d4af37;
+  text-align: center;
+  font-weight: bold;
+}
+
+.tx-numbers, .tx-numbers-line2 {
+  width: 8px;
+  height: 8px;
+  background-color: #555;
+  box-shadow: 0 -12px 0 0 #555, 0 12px 0 0 #555;
+  border-radius: 2px;
+  position: absolute;
+  transform: rotate(90deg);
+  left: 18px;
+  top: 40px;
+}
+.tx-numbers-line2 { top: 52px; }
+
+.tx-anim-container:hover .tx-post {
+  animation: tx-slide-post 1s cubic-bezier(0.165, 0.84, 0.44, 1) both;
+}
+
+@keyframes tx-slide-post {
+  50% { transform: translateY(0); }
+  100% { transform: translateY(-50px); }
+}
+
+.tx-anim-container:hover .tx-dollar {
+  animation: fade-in-fwd 0.3s 1s backwards;
+}
+
+/* ==========================================================================
+   13. PAYMENT STATUS ANIMATION (New)
+   ========================================================================== */
+/* Used in PaymentStatus.jsx */
+.ps-container {
+    background-color: rgba(255, 255, 255, 0.9);
+    display: flex;
+    width: 460px;
+    height: 120px;
+    position: relative;
+    border-radius: 6px;
+    transition: 0.3s ease-in-out;
+    transform: scale(0.85); /* Adjust scale for Modal */
+}
+
+.ps-container:hover {
+    transform: scale(0.9);
+}
+
+.ps-left-side {
+    /* Background Color is set inline via React for dynamic Green/Red/Blue */
+    width: 130px;
+    height: 120px;
+    border-radius: 4px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: 0.3s;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+
+.ps-right-side {
+    width: calc(100% - 130px);
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    cursor: pointer;
+    justify-content: space-between;
+    white-space: nowrap;
+    transition: 0.3s;
+    padding-right: 20px;
+}
+
+.ps-arrow { width: 20px; height: 20px; margin-right: 20px; }
+
+.ps-new {
+    font-size: 24px;
+    font-family: "Rubik", sans-serif;
+    margin-left: 20px;
+    color: #333;
+    font-weight: 500;
+}
+
+/* Status Card Animation */
+.ps-card {
+    width: 70px;
+    height: 46px;
+    /* Color set inline via React */
+    border-radius: 6px;
+    position: absolute;
+    display: flex;
+    z-index: 10;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+    /* Auto-play animation */
+    animation: ps-slide-top 1.2s cubic-bezier(0.645, 0.045, 0.355, 1) both;
+}
+
+.ps-card-line {
+    width: 65px;
+    height: 13px;
+    background-color: rgba(255,255,255,0.5);
+    border-radius: 2px;
+    margin-top: 7px;
+}
+
+.ps-buttons {
+    width: 8px;
+    height: 8px;
+    background-color: rgba(0,0,0,0.2);
+    border-radius: 50%;
+    margin-top: 5px;
+    transform: rotate(90deg);
+    margin: 10px 0 0 -30px;
+}
+
+/* Status Machine Animation */
+.ps-post {
+    width: 63px;
+    height: 75px;
+    background-color: #dddde0;
+    position: absolute;
+    z-index: 11;
+    bottom: 10px;
+    top: 120px;
+    border-radius: 6px;
+    overflow: hidden;
+    /* Auto-play animation */
+    animation: ps-slide-post 1s cubic-bezier(0.165, 0.84, 0.44, 1) both;
+}
+
+.ps-post-line {
+    width: 47px;
+    height: 9px;
+    background-color: #545354;
+    position: absolute;
+    border-radius: 0px 0px 3px 3px;
+    right: 8px;
+    top: 8px;
+}
+
+.ps-screen {
+    width: 47px;
+    height: 23px;
+    background-color: #ffffff;
+    position: absolute;
+    top: 22px;
+    right: 8px;
+    border-radius: 3px;
+}
+
+.ps-numbers {
+    width: 12px;
+    height: 12px;
+    background-color: #838183;
+    border-radius: 2px;
+    position: absolute;
+    transform: rotate(90deg);
+    left: 25px;
+    top: 52px;
+}
+
+.ps-dollar {
+    position: absolute;
+    font-size: 16px;
+    width: 100%;
+    left: 0;
+    top: 0;
+    /* Color set inline */
+    text-align: center;
+    font-weight: bold;
+    animation: fade-in-fwd 0.3s 1s backwards;
+}
+
+/* Renamed keyframes to avoid conflict */
+@keyframes ps-slide-top {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-70px) rotate(90deg); }
+    60% { transform: translateY(-70px) rotate(90deg); }
+    100% { transform: translateY(-8px) rotate(90deg); }
+}
+
+@keyframes ps-slide-post {
+    50% { transform: translateY(0); }
+    100% { transform: translateY(-70px); }
+}
+
+@keyframes fade-in-fwd {
+    0% { opacity: 0; transform: translateY(-5px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+/* ==========================================================================
+   NEW SWIPE ANIMATION STYLES (Transaction Button & Payment Status)
+   ========================================================================== */
+
+/* --- Container --- */
+/* This is the main box for the button/status */
+.swipe-container {
+    background-color: rgba(255, 255, 255, 0.9); /* High contrast background */
+    display: flex;
+    width: 260px; /* Fixed width to match your layout */
+    height: 90px;
+    position: relative;
+    border-radius: 6px;
+    transition: 0.3s ease-in-out;
+    cursor: pointer;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+/* Hover Effect: Shrinks width and expands the colorful left side */
+.swipe-container:hover {
+    transform: scale(1.03);
+}
+
+/* --- Left Side (The Animation Box) --- */
+.swipe-left {
+    width: 90px; /* Initial width */
+    height: 100%;
+    border-radius: 4px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: 0.3s ease-in-out;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+
+/* On Hover, left side takes over (optional, cool effect) */
+.swipe-container.interactive:hover .swipe-left {
+    width: 100%;
+}
+
+/* --- Right Side (The Text) --- */
+.swipe-right {
+    width: calc(100% - 90px);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    overflow: hidden;
+    padding: 0 15px;
+    white-space: nowrap;
+    transition: 0.3s ease-in-out;
+}
+
+.swipe-text {
+    font-size: 16px;
+    font-family: 'Rubik', sans-serif;
+    color: #333;
+    font-weight: 500;
+}
+
+.swipe-arrow {
+    width: 15px;
+    height: 15px;
+    fill: #cfcfcf;
+}
+
+/* --- The Mini Card Inside the Animation --- */
+.swipe-card {
+    width: 50px;
+    height: 32px;
+    /* Background color set inline via React */
+    border-radius: 4px;
+    position: absolute;
+    display: flex;
+    z-index: 10;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+}
+
+.swipe-card-line {
+    width: 45px;
+    height: 8px;
+    background-color: rgba(255,255,255,0.5);
+    border-radius: 2px;
+    margin-top: 5px;
+}
+
+.swipe-buttons {
+    width: 6px;
+    height: 6px;
+    background-color: rgba(0,0,0,0.3);
+    box-shadow: 0 -8px 0 0 rgba(0,0,0,0.3), 0 8px 0 0 rgba(0,0,0,0.3);
+    border-radius: 50%;
+    margin-top: 5px;
+    transform: rotate(90deg);
+    margin-left: -20px;
+}
+
+/* --- The Machine (Post) --- */
+.swipe-post {
+    width: 45px;
+    height: 55px;
+    background-color: #444; /* Machine Body Color */
+    position: absolute;
+    z-index: 11;
+    bottom: 0px;
+    top: 80px; /* Starts hidden */
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.swipe-post-line {
+    width: 35px;
+    height: 6px;
+    background-color: #222;
+    position: absolute;
+    border-radius: 0px 0px 3px 3px;
+    right: 5px;
+    top: 5px;
+}
+
+.swipe-screen {
+    width: 35px;
+    height: 18px;
+    background-color: #000;
+    position: absolute;
+    top: 16px;
+    right: 5px;
+    border-radius: 2px;
+    border: 1px solid #333;
+}
+
+.swipe-numbers {
+    width: 8px;
+    height: 8px;
+    background-color: #555;
+    box-shadow: 0 -12px 0 0 #555, 0 12px 0 0 #555;
+    border-radius: 2px;
+    position: absolute;
+    transform: rotate(90deg);
+    left: 18px;
+    top: 40px;
+}
+
+.swipe-numbers-line2 {
+    width: 8px;
+    height: 8px;
+    background-color: #555;
+    box-shadow: 0 -12px 0 0 #555, 0 12px 0 0 #555;
+    border-radius: 2px;
+    position: absolute;
+    transform: rotate(90deg);
+    left: 18px;
+    top: 52px;
+}
+
+.swipe-dollar {
+    position: absolute;
+    font-size: 12px;
+    width: 100%;
+    left: 0;
+    top: 1px;
+    text-align: center;
+    font-weight: bold;
+    /* Color set inline */
+}
+
+/* --- ANIMATIONS (Triggered on Hover or Load) --- */
+
+/* Card Sliding In */
+.swipe-container:hover .swipe-card,
+.swipe-container.autoplay .swipe-card {
+    animation: swipe-slide-top 1.2s cubic-bezier(0.645, 0.045, 0.355, 1) both;
+}
+
+/* Machine Sliding Up */
+.swipe-container:hover .swipe-post,
+.swipe-container.autoplay .swipe-post {
+    animation: swipe-slide-post 1s cubic-bezier(0.165, 0.84, 0.44, 1) both;
+}
+
+/* Dollar Sign Fading In */
+.swipe-container:hover .swipe-dollar,
+.swipe-container.autoplay .swipe-dollar {
+    animation: swipe-fade-in 0.3s 1s backwards;
+}
+
+@keyframes swipe-slide-top {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-50px) rotate(90deg); }
+    60% { transform: translateY(-50px) rotate(90deg); }
+    100% { transform: translateY(-6px) rotate(90deg); }
+}
+
+@keyframes swipe-slide-post {
+    50% { transform: translateY(0); }
+    100% { transform: translateY(-50px); }
+}
+
+@keyframes swipe-fade-in {
+    0% { opacity: 0; transform: translateY(-5px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+/* --- SETTINGS PAGE --- */
+.settings-container {
+    width: 700px;
+    display: flex;
+    flex-direction: column;
+}
+
+.settings-tabs {
+    display: flex;
+    justify-content: space-around;
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+}
+
+.tab-btn {
+    background: none;
+    border: none;
+    color: #aaa;
+    font-size: 1em;
+    cursor: pointer;
+    padding: 5px 10px;
+    transition: 0.3s;
+}
+
+.tab-btn.active {
+    color: white;
+    border-bottom: 2px solid #d4af37;
+}
+
+.settings-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 10px;
+}
+
+/* Forms */
+.settings-form .input-group {
+    margin-bottom: 15px;
+    text-align: left;
+}
+.settings-form label {
+    display: block;
+    color: #ccc;
+    font-size: 0.85em;
+    margin-bottom: 5px;
+}
+.settings-form input {
+    width: 100%;
+    background: rgba(0,0,0,0.2);
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 8px;
+    border-radius: 5px;
+    color: white;
+    outline: none;
+}
+
+/* List Items (Cards/Accounts) */
+.settings-item {
+    background: rgba(255,255,255,0.05);
+    padding: 15px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+.item-info { display: flex; flex-direction: column; text-align: left; }
+.item-title { color: white; font-weight: 500; }
+.item-sub { color: #aaa; font-size: 0.8em; }
+
+/* Buttons */
+.toggle-btn {
+    padding: 5px 10px;
+    border: 1px solid rgba(255,255,255,0.2);
+    background: transparent;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.toggle-btn.on { border-color: #ff6b6b; color: #ff6b6b; } /* Deactivate color */
+.toggle-btn.off { border-color: #90ee90; color: #90ee90; } /* Activate color */
+
+.danger-btn {
+    background: rgba(255, 50, 50, 0.2);
+    color: #ff6b6b;
+    border: 1px solid rgba(255, 50, 50, 0.4);
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/* Beneficiaries */
+.ben-form {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+.ben-form input {
+    flex: 1;
+    background: rgba(0,0,0,0.2);
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 8px;
+    border-radius: 5px;
+    color: white;
+}
+.ben-header {
+    display: grid;
+    grid-template-columns: 1.5fr 1.5fr 1fr 0.5fr;
+    font-weight: bold;
+    color: #ccc;
+    padding: 5px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    font-size: 0.9em;
+}
+.ben-row {
+    display: grid;
+    grid-template-columns: 1.5fr 1.5fr 1fr 0.5fr;
+    padding: 10px 5px;
+    color: white;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    align-items: center;
+    font-size: 0.9em;
+}
+.delete-icon {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2em;
 }

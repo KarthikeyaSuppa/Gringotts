@@ -87,4 +87,20 @@ public class UserService {
         if (phoneNumber == null) return false;
         return userRepository.existsByPhoneNumber(phoneNumber);
     }
+
+
+    // ... inside UserService ...
+    public User updateUserProfile(Long userId, UserDTO updates) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (updates.getFirstName() != null) user.setFirstName(updates.getFirstName());
+        if (updates.getLastName() != null) user.setLastName(updates.getLastName());
+        if (updates.getPhone() != null) user.setPhone(updates.getPhone());
+        if (updates.getEmail() != null) user.setEmail(updates.getEmail());
+        // DOB is usually Date, assuming String for simplicity based on DTO
+        if (updates.getDob() != null) user.setDob(updates.getDob());
+
+        return userRepository.save(user);
+    }
 }

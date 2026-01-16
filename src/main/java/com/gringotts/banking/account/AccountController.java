@@ -11,8 +11,10 @@ import java.util.Map;
 @RequestMapping("/api/accounts")
 public class AccountController {
 
-    @Autowired
-    private AccountService accountService;
+
+      @Autowired
+      private AccountService accountService;
+
 
     // NEW ENDPOINT: Create Account
     // POST /api/accounts/{id}
@@ -20,9 +22,10 @@ public class AccountController {
     public ResponseEntity<?> createAccount(@PathVariable Long userId, @RequestBody Map<String, String> request) {
         try {
             String type = request.getOrDefault("accountType", "SAVINGS");
-            Account account = accountService.createAccount(userId, type);
-            return ResponseEntity.ok(account);
-        } catch (RuntimeException e) {
+               Account account = accountService.createAccount(userId, type);
+              return ResponseEntity.ok(account);
+          } catch (RuntimeException e) {
+
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
@@ -36,14 +39,14 @@ public class AccountController {
             BigDecimal amount = request.get("amount");
             Account account = accountService.deposit(id, amount);
             return ResponseEntity.ok(account);
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
+          } catch (RuntimeException e) {
+             return ResponseEntity.badRequest().body(e.getMessage());
+         }
+      }
 
-    // DELETE /api/accounts/{id}
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteAccount(@PathVariable Long id) {
+      // DELETE /api/accounts/{id}
+      @DeleteMapping("/{id}")
+      public ResponseEntity<?> deleteAccount(@PathVariable Long id) {
         try {
             accountService.deleteAccount(id);
             return ResponseEntity.ok("Account deleted");

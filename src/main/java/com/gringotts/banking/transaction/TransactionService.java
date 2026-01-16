@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import com.gringotts.banking.card.CardRepository;
 
 import java.util.Optional;
 
@@ -26,6 +27,9 @@ public class TransactionService {
 
     @Autowired
     private AccountRepository accountRepository;
+
+    @Autowired
+    private CardRepository cardRepository;
 
     /**
      * NEW: Transfer using Account Number for the destination.
@@ -129,9 +133,31 @@ public class TransactionService {
             throw new RuntimeException("Account is CLOSED. Withdrawal denied.");
         }
 
-        // 3. Check Balance
-        if (account.getBalance().compareTo(amount) < 0) {
-            throw new RuntimeException("Insufficient funds");
+
+        // ✅ LOGIC CHANGE: Handle Credit vs Debit
+        if ("CREDIT".equals(account.getAccountType())) {
+            // Find the card linked to this account to get the Limit
+            // (Assuming 1 credit card per credit account for simplicity)
+            var cards = cardRepository.findByAccountId(accountId);
+            if(cards.isEmpty()) throw new RuntimeException("No card linked to this credit account");
+
+            BigDecimal limit = cards.get(0).getCreditLimit();
+            BigDecimal currentDebt = account.getBalance().abs(); // -100 balance = 100 debt
+
+            // Check: (Current Debt + New Spend) > Limit?
+            // Note: Since balance is negative, we add usage.
+            // Better math: NewBalance would be (Current - Amount). If NewBalance < -Limit, fail.
+            BigDecimal newBalance = account.getBalance().subtract(amount);
+
+            if (newBalance.negate().compareTo(limit) > 0) {
+                throw new RuntimeException("Transaction declined: Over Credit Limit");
+            }
+        } else {
+            // Standard Savings/Checking Logic
+            // 3. Check Balance
+            if (account.getBalance().compareTo(amount) < 0) {
+                throw new RuntimeException("Insufficient funds");
+            }
         }
 
         // 4. Deduct Money
