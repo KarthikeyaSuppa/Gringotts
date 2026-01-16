@@ -89,17 +89,25 @@ public class UserService {
     }
 
 
-    // ... inside UserService ...
     public User updateUserProfile(Long userId, UserDTO updates) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
+        // 1. Update Standard Fields
         if (updates.getFirstName() != null) user.setFirstName(updates.getFirstName());
         if (updates.getLastName() != null) user.setLastName(updates.getLastName());
-        if (updates.getPhone() != null) user.setPhone(updates.getPhone());
         if (updates.getEmail() != null) user.setEmail(updates.getEmail());
-        // DOB is usually Date, assuming String for simplicity based on DTO
-        if (updates.getDob() != null) user.setDob(updates.getDob());
+
+        // 2. Update Phone Number (Matching your getter/setter)
+        if (updates.getPhoneNumber() != null) {
+            user.setPhoneNumber(updates.getPhoneNumber());
+        }
+
+        // 3. Update Date of Birth
+        // Since your DTO already has LocalDate, we just assign it directly. No parsing needed.
+        if (updates.getDateOfBirth() != null) {
+            user.setDateOfBirth(updates.getDateOfBirth());
+        }
 
         return userRepository.save(user);
     }
