@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from './api';
 import './App.css'; 
-import TransactionButton from './TransactionButton';
+import TransactionButton from './TransactionButton'; // ✅ Imported
 import PaymentStatus from './PaymentStatus'; 
 
 const Transactions = () => {
@@ -11,56 +11,72 @@ const Transactions = () => {
     // Data
     const [transactions, setTransactions] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [myAccountId, setMyAccountId] = useState(null);
+    const [myAccountId, setMyAccountId] = useState(null); // This needs to be set!
 
     // Filters
     const [filterStart, setFilterStart] = useState('');
     const [filterEnd, setFilterEnd] = useState('');
-    const [filterFlow, setFilterFlow] = useState(''); // 'SENT' or 'RECEIVED'
-    const [filterType, setFilterType] = useState(''); // 'TRANSFER', 'WITHDRAWAL', etc.
+    const [filterFlow, setFilterFlow] = useState(''); 
+    const [filterType, setFilterType] = useState(''); 
+
+    // Pagination State
+    const [currentPage, setCurrentPage] = useState(0);
+    const [totalPages, setTotalPages] = useState(0);
+    const PAGE_SIZE = 8; 
 
     // Modal
     const [selectedTx, setSelectedTx] = useState(null);
 
     useEffect(() => {
         loadData();
-    }, []);
+    }, [currentPage]); 
 
     const loadData = async () => {
+        const userId = localStorage.getItem('userId');
+        if (!userId) return;
         setLoading(true);
         try {
-            const userId = localStorage.getItem('userId');
-            // 1. Get Account ID first (needed for queries)
-            const accRes = await api.get(`/api/accounts/by-user/${userId}`);
-            const accId = accRes.data[0]?.id; // Assuming primary account
-            setMyAccountId(accId);
-
-            if(accId) {
-                // Initial Load: Fetch all or search with empty filters
-                fetchTransactions(accId);
+            // 1. Fetch Transactions
+            const res = await api.get(`/api/transactions/history/${userId}?page=${currentPage}&size=${PAGE_SIZE}`);
+            setTransactions(res.data.content);
+            setTotalPages(res.data.totalPages);
+            
+            // 2. ✅ FETCH ACCOUNT ID (CRITICAL FIX)
+            // We need this to know if a transaction is Sent or Received
+            if (!myAccountId) {
+                const accRes = await api.get(`/api/accounts/by-user/${userId}`);
+                if (accRes.data && accRes.data.length > 0) {
+                    // Assuming the first account is the primary one for calculations
+                    setMyAccountId(accRes.data[0].id);
+                }
             }
-        } catch (e) {
-            console.error("Load failed", e);
+
+        } catch (error) {
+            console.error("Failed to load data", error);
         } finally {
             setLoading(false);
+        }
+    };
+
+    const handlePageChange = (newPage) => {
+        if (newPage >= 0 && newPage < totalPages) {
+            setCurrentPage(newPage);
         }
     };
 
     const fetchTransactions = async (accId) => {
         try {
             const params = {
-                accountId: accId,
+                accountId: accId, // This endpoint typically requires accountId, ensuring we use the one we fetched
+                userId: localStorage.getItem('userId'), // Or userId depending on your backend update
                 startDate: filterStart,
                 endDate: filterEnd,
                 flow: filterFlow,
                 type: filterType
             };
-            // Clean empty params
             Object.keys(params).forEach(key => !params[key] && delete params[key]);
 
             const res = await api.get('/api/transactions/search', { params });
-            
-            // Sort by Date Descending (Newest first)
             const sorted = res.data.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
             setTransactions(sorted);
         } catch (e) {
@@ -70,20 +86,19 @@ const Transactions = () => {
 
     const handleApplyFilters = (e) => {
         e.preventDefault();
+        // Use myAccountId which we now definitely have
         if(myAccountId) fetchTransactions(myAccountId);
     };
 
     const handleDownload = () => {
-        if(!myAccountId) return;
-        // Construct query string manually for window.open
-        let url = `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8050'}/api/transactions/download?accountId=${myAccountId}`;
+        const userId = localStorage.getItem('userId');
+        if(!userId) return;
+        
+        let url = `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8050'}/api/transactions/download?userId=${userId}`;
         if(filterStart) url += `&startDate=${filterStart}`;
         if(filterEnd) url += `&endDate=${filterEnd}`;
         if(filterFlow) url += `&flow=${filterFlow}`;
         if(filterType) url += `&type=${filterType}`;
-        
-        // Need to pass token? Browser window.open won't pass header. 
-        // FIX: For security, usually we use axios with blob. For this demo, let's assume we use axios.
         
         api.get(url, { responseType: 'blob' })
            .then((response) => {
@@ -100,10 +115,12 @@ const Transactions = () => {
 
     // --- Helper Logic ---
 
-    // Is the money leaving or entering MY account?
-    const isDebit = (tx) => tx.account.id === myAccountId;
+    // ✅ FIX: Compare IDs safely (toString ensures no type mismatch issues)
+    const isDebit = (tx) => {
+        if (!myAccountId || !tx.account) return false;
+        return String(tx.account.id) === String(myAccountId);
+    };
 
-    // Group by Month (e.g., "January 2026")
     const groupedTransactions = transactions.reduce((groups, tx) => {
         const date = new Date(tx.timestamp);
         const monthYear = date.toLocaleString('default', { month: 'long', year: 'numeric' });
@@ -119,29 +136,27 @@ const Transactions = () => {
         alert("Reference ID Copied!");
     };
 
-    // Format Date for Modal: "26-06-2026, 07:55 PM"
     const formatFullDate = (isoString) => {
         const d = new Date(isoString);
-        const datePart = d.toLocaleDateString('en-GB').replace(/\//g, '-'); // 26-06-2026
+        const datePart = d.toLocaleDateString('en-GB').replace(/\//g, '-'); 
         const timePart = d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
         return `${datePart}, ${timePart}`;
     };
 
     return (
         <section id="U-Home">
-            {/* Right Navbar */}
             <div className="right-navbar show">
                 <div className="nav-icon" title="Dashboard" onClick={() => navigate('/dashboard')}>
                     <img src="/img/Home.ico" alt="Home" />
                 </div>
-                <div className="nav-icon" role="button" title="Settings" onClick={() => navigate('/settings')}>
-                    <img src="/img/Settings.ico" alt="Settings"  />
+                <div className="nav-icon" title="Pay" onClick={() => navigate('/pay')}>
+                    <img src="/img/Pay.ico" alt="Pay" style={{filter: 'invert(1)'}} /> 
                 </div>
                 <div className="nav-icon" role="button" title="Cards" onClick={() => navigate('/cards')}>
-                    <img src="/img/Card.ico" alt="Cards"  />
+                    <img src="/img/Card.ico" alt="Cards" />
                 </div>
-                <div className="nav-icon" title="Pay" onClick={() => navigate('/pay')}>
-                    <img src="/img/Pay.ico" alt="Pay" /> 
+                <div className="nav-icon" title="Transactions" onClick={() => navigate('/transactions')}>
+                    <img src="/img/Transaction_History.ico" alt="History" />
                 </div>
                 <div className="nav-icon logout-btn" title="Logout" onClick={() => { localStorage.clear(); navigate('/'); }}>
                     <img src="/img/Logout.ico" alt="Logout" />
@@ -150,8 +165,14 @@ const Transactions = () => {
 
             <div className="UserDetails-box tx-container">
                 <div className="tx-header">
-                    <h2>Transactions</h2>
-                    {/* FILTERS BAR */}
+                    <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+                        <h2>Transactions</h2>
+                        {/* ✅ ADDED BUTTON BACK */}
+                        <div style={{transform: 'scale(0.8)', marginRight: '-20px'}}>
+                            <TransactionButton />
+                        </div>
+                    </div>
+
                     <div className="filter-bar">
                         <input type="date" value={filterStart} onChange={e => setFilterStart(e.target.value)} />
                         <span style={{color:'white'}}>-</span>
@@ -175,7 +196,6 @@ const Transactions = () => {
                     </div>
                 </div>
 
-                {/* TABLE HEADER */}
                 <div className="tx-table-header">
                     <div className="col">Ref ID</div>
                     <div className="col">Type</div>
@@ -184,7 +204,6 @@ const Transactions = () => {
                     <div className="col">Tag</div>
                 </div>
 
-                {/* SCROLLABLE LIST */}
                 <div className="tx-list">
                     {Object.keys(groupedTransactions).map(month => (
                         <div key={month} className="month-group">
@@ -213,26 +232,38 @@ const Transactions = () => {
                             })}
                         </div>
                     ))}
-                    {transactions.length === 0 && <p style={{textAlign:'center', marginTop: 20}}>No transactions found.</p>}
+                    {transactions.length === 0 && !loading && <p style={{textAlign:'center', marginTop: 20}}>No transactions found.</p>}
                 </div>
+
+                <div className="pagination-footer">
+                    <button 
+                        className="page-btn" 
+                        disabled={currentPage === 0}
+                        onClick={() => handlePageChange(currentPage - 1)}
+                    >
+                        &lt; Prev
+                    </button>
+                    
+                    <span className="page-info">
+                        Page {currentPage + 1} of {totalPages === 0 ? 1 : totalPages}
+                    </span>
+                    
+                    <button 
+                        className="page-btn" 
+                        disabled={currentPage >= totalPages - 1}
+                        onClick={() => handlePageChange(currentPage + 1)}
+                    >
+                        Next &gt;
+                    </button>
+                </div>
+                
             </div>
 
-            {/* DETAIL MODAL */}
             {selectedTx && (
                 <div className="tx-modal-overlay" onClick={() => setSelectedTx(null)}>
                     <div className="modal tx-modal" onClick={e => e.stopPropagation()}>
                         
-                        {/* 1. REMOVED the top Header and Big Amount as requested */}
-                        {/* 3. ANIMATION (Showing Amount as Title) */}
-                        <div style={{ marginBottom: 20, transform: 'scale(0.9)' }}>
-                            <PaymentStatus 
-                                status="success" 
-                                theme={isDebit(selectedTx) ? 'red' : 'green'} 
-                                // ✅ NEW: Display Amount here instead of "Outgoing Transfer"
-                                title={`${isDebit(selectedTx) ? '-' : '+'}$${selectedTx.amount.toFixed(2)}`}
-                            />
-                        </div>
-                        {/* 2. Transaction Details */}
+                        {/* Transaction Details */}
                         <div className="tx-details-grid" style={{ marginTop: '10px' }}>
                             <label>Description:</label>
                             <span>{selectedTx.description}</span>
@@ -257,6 +288,15 @@ const Transactions = () => {
                             <span className="rubik-number" style={{color: 'white', fontWeight: 'bold'}}>
                                 ${ (isDebit(selectedTx) ? selectedTx.sourceBalanceAfter : selectedTx.targetBalanceAfter)?.toFixed(2) || '---' }
                             </span>
+                        </div>
+
+                        {/* ✅ ANIMATION (Showing Amount as Title) */}
+                        <div style={{ marginBottom: 20, transform: 'scale(0.9)' }}>
+                            <PaymentStatus 
+                                status="success" 
+                                theme={isDebit(selectedTx) ? 'red' : 'green'} 
+                                title={`${isDebit(selectedTx) ? '-' : '+'}$${selectedTx.amount.toFixed(2)}`}
+                            />
                         </div>
 
                         <button className="c-btn" onClick={() => setSelectedTx(null)}>Close</button>

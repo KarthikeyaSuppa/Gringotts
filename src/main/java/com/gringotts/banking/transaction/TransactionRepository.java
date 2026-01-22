@@ -22,6 +22,18 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
      * @param pageable  Pagination information (page number, size, sort).
      * @return A Page of Transaction entities.
      */
-    @Query("SELECT t FROM Transaction t WHERE t.account.id = :accountId OR t.targetAccount.id = :accountId ORDER BY t.timestamp DESC")
-    Page<Transaction> findByAccountId(@Param("accountId") Long accountId, Pageable pageable);
+   /** @Query("SELECT t FROM Transaction t WHERE t.account.id = :accountId OR t.targetAccount.id = :accountId ORDER BY t.timestamp DESC")
+    Page<Transaction> findByAccountId(@Param("accountId") Long accountId, Pageable pageable); **/
+
+    /**
+     * Finds all transactions involving a specific account (either as sender or receiver).
+     * Supports Pagination.
+     * * NOTE: We pass the accountId twice (once for sender check, once for receiver check)
+     * to satisfy the "Or" condition in the method name.
+     */
+    Page<Transaction> findByAccountIdOrTargetAccountIdOrderByTimestampDesc(
+            Long accountId,
+            Long targetAccountId,
+            Pageable pageable
+    );
 }

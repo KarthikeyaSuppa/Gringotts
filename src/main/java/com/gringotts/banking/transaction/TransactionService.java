@@ -6,6 +6,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest; // ✅ Added for Pagination
 import org.springframework.stereotype.Service;
 import com.gringotts.banking.card.CardRepository;
 
@@ -181,7 +182,59 @@ public class TransactionService {
      * Retrieves transaction history for an account.
      * Supports Pagination to handle large datasets efficiently.
      */
-    public Page<Transaction> getTransactionHistory(Long accountId, Pageable pageable) {
-        return transactionRepository.findByAccountId(accountId, pageable);
+    /**
+     * ✅ NEW: Retrieves paginated transaction history for a User.
+     * Uses the correct Repository method signature.
+     */
+    public Page<TransactionDTO> getTransactions(Long userId, int page, int size) {
+        // 1. Get User's Account (Assuming 1 user = 1 primary account for this view)
+        Account account = accountRepository.findByUserId(userId)
+                .stream().findFirst()
+                .orElseThrow(() -> new RuntimeException("No account found for user"));
+
+        // 2. Create Pageable
+        Pageable pageable = PageRequest.of(page, size);
+
+        // 3. Fetch Data using the updated Repository Method
+        // We pass the ID twice because we want transactions where I am Sender OR Receiver
+        Page<Transaction> txPage = transactionRepository.findByAccountIdOrTargetAccountIdOrderByTimestampDesc(
+                account.getId(),
+                account.getId(),
+                pageable
+        );
+
+        // 4. Convert to DTO
+        return txPage.map(this::convertToDTO);
     }
+
+    // Helper to convert Entity -> DTO
+    private TransactionDTO convertToDTO(Transaction tx) {
+        TransactionDTO dto = new TransactionDTO();
+        dto.setId(tx.getId());
+        dto.setReferenceId(tx.getReferenceId());
+        dto.setType(tx.getType().toString());
+        dto.setAmount(tx.getAmount());
+        dto.setDescription(tx.getDescription());
+        dto.setTimestamp(tx.getTimestamp());
+
+        // Pass account details for UI logic
+        if (tx.getAccount() != null) {
+            TransactionDTO.AccountSummary acc = new TransactionDTO.AccountSummary();
+            acc.setId(tx.getAccount().getId());
+            acc.setAccountNumber(tx.getAccount().getAccountNumber());
+            dto.setAccount(acc);
+        }
+        if (tx.getTargetAccount() != null) {
+            TransactionDTO.AccountSummary target = new TransactionDTO.AccountSummary();
+            target.setId(tx.getTargetAccount().getId());
+            target.setAccountNumber(tx.getTargetAccount().getAccountNumber());
+            dto.setTargetAccount(target);
+        }
+
+        dto.setSourceBalanceAfter(tx.getSourceBalanceAfter());
+        dto.setTargetBalanceAfter(tx.getTargetBalanceAfter());
+
+        return dto;
+    }
+
 }
