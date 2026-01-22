@@ -56,5 +56,5 @@ npm run dev
 - Inspect DevTools > Network to verify requests to http://localhost:8050 succeed.
 
 ---
-If you want, I can add scripts to automatically create the uploads folder or show a small health endpoint; tell me which and I'll add them.
+
 
